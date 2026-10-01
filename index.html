@@ -4,21 +4,28 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex,nofollow">
+
 <title>Invoice Maker — ShortBamboo</title>
 
 <style>
 :root{
   --bg:#eef0e8;
-  --fg:#1a1d18;
-  --card:#fff;
-  --line:#d9dccf;
-  --acc:#526b36;
+  --paper:#ffffff;
+  --ink:#10120f;
+  --text:#20241d;
+  --muted:#70766c;
+  --line:#dfe3d7;
+  --soft:#f7f8f3;
+  --green:#526b36;
+  --green-dark:#3f5827;
   --lime:#d9f08c;
-  --mut:#687064;
   --danger:#b42318;
+  --shadow:0 12px 35px rgba(16,18,15,.08);
 }
 
-*{box-sizing:border-box}
+*{
+  box-sizing:border-box;
+}
 
 html{
   scroll-behavior:smooth;
@@ -27,474 +34,919 @@ html{
 body{
   margin:0;
   background:var(--bg);
-  color:var(--fg);
-  font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
-  padding:calc(12px + env(safe-area-inset-top)) 12px calc(16px + env(safe-area-inset-bottom));
+  color:var(--text);
+  font-family:
+    Inter,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    Arial,
+    sans-serif;
+  padding:
+    calc(14px + env(safe-area-inset-top))
+    14px
+    calc(22px + env(safe-area-inset-bottom));
 }
 
-.wrap{
-  max-width:920px;
-  margin:auto;
-}
-
-.tabs,
-.bar{
-  display:flex;
-  gap:8px;
-  flex-wrap:wrap;
-}
-
-.tabs{
-  margin-bottom:12px;
-}
-
-.tabs button{
-  flex:1;
-}
-
-.bar{
-  margin-bottom:12px;
-}
-
-.bar input{
-  flex:1 1 170px;
-  min-width:150px;
-  background:var(--card);
-  border:1px solid var(--line);
-  border-radius:8px;
-  padding:10px 12px;
-  color:var(--fg);
+button,
+input,
+textarea,
+select{
   font:inherit;
 }
 
 button{
   border:0;
-  border-radius:8px;
-  padding:10px 14px;
-  background:var(--acc);
-  color:#fff;
-  font:700 14px inherit;
   cursor:pointer;
-}
-
-button.ghost{
-  background:transparent;
-  color:var(--fg);
-  border:1px solid var(--line);
-}
-
-button.danger{
-  color:var(--danger);
-  border-color:#e5bdb9;
-}
-
-button:disabled{
-  opacity:.55;
-  cursor:not-allowed;
 }
 
 button:focus-visible,
 input:focus-visible,
 textarea:focus-visible,
 select:focus-visible{
-  outline:2px solid var(--acc);
+  outline:2px solid var(--green);
   outline-offset:2px;
 }
 
-.paper{
-  background:#fff;
-  color:#1a1d18;
-  border-radius:12px;
-  padding:30px;
-  box-shadow:0 5px 24px #10120f0d;
+/* =========================
+   APP
+========================= */
+
+.app{
+  width:100%;
+  max-width:1080px;
+  margin:0 auto;
 }
 
-.top{
+/* =========================
+   TOP NAV
+========================= */
+
+.topbar{
   display:flex;
+  align-items:center;
   justify-content:space-between;
-  gap:18px;
-  flex-wrap:wrap;
-  border-bottom:3px solid #10120f;
-  padding-bottom:15px;
+  gap:12px;
+  margin-bottom:12px;
 }
 
-.brand{
-  font-size:25px;
+.app-title{
+  font-size:18px;
   font-weight:850;
-  letter-spacing:-.4px;
+  letter-spacing:-.3px;
 }
 
-.brand small{
+.app-title span{
   display:block;
-  color:#666;
-  font-size:12px;
-  font-weight:400;
-  letter-spacing:0;
-  margin-top:3px;
+  color:var(--muted);
+  font-size:11px;
+  font-weight:500;
+  margin-top:2px;
 }
 
-.title{
-  font-size:30px;
-  font-weight:850;
-}
-
-.grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:20px;
-  margin:20px 0;
-}
-
-label{
-  display:block;
-  color:#777;
-  font-size:12px;
-  font-weight:700;
-  margin:9px 0 4px;
-}
-
-.paper input,
-.paper textarea,
-.paper select{
-  width:100%;
-  padding:7px 9px;
-  border:1px solid #dcded6;
-  border-radius:6px;
-  background:#fafaf7;
-  color:#1a1d18;
-  font:inherit;
-}
-
-.paper textarea{
-  resize:vertical;
-  min-height:38px;
-}
-
-.mini{
+.tabs{
   display:flex;
-  gap:6px;
-  margin-top:6px;
+  gap:7px;
+  background:rgba(255,255,255,.65);
+  border:1px solid var(--line);
+  border-radius:11px;
+  padding:4px;
 }
 
-.mini button{
-  background:#eef0e8;
-  color:#3f5d1f;
-  border:1px solid #d9dccf;
-  padding:6px 10px;
-  font-size:12px;
+.tabs button{
+  min-width:125px;
+  padding:9px 14px;
+  border-radius:8px;
+  background:transparent;
+  color:var(--text);
+  font-size:13px;
+  font-weight:750;
 }
 
-.table-wrap{
-  overflow-x:auto;
-  -webkit-overflow-scrolling:touch;
-}
-
-table{
-  width:100%;
-  min-width:620px;
-  border-collapse:collapse;
-}
-
-th{
-  background:#10120f;
+.tabs button.active{
+  background:var(--green);
   color:#fff;
-  text-align:left;
-  font-size:12px;
-  padding:9px 8px;
 }
 
-td{
-  padding:7px 4px;
-  border-bottom:1px solid #eee;
-  vertical-align:top;
+/* =========================
+   ACTION BAR
+========================= */
+
+.actionbar{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-bottom:13px;
 }
 
-.q{
-  width:70px;
+.actions{
+  display:flex;
+  gap:7px;
+  flex-wrap:wrap;
 }
 
-.r{
-  width:110px;
-}
-
-.a{
-  width:115px;
-  text-align:right;
-  font-weight:700;
+.btn{
+  min-height:40px;
+  padding:9px 14px;
+  border-radius:9px;
+  background:var(--green);
+  color:#fff;
+  font-size:13px;
+  font-weight:750;
   white-space:nowrap;
 }
 
-.x{
-  width:42px;
+.btn:hover{
+  background:var(--green-dark);
 }
 
-.x button{
-  background:#eee;
-  color:#333;
-  padding:6px 10px;
+.btn.secondary{
+  background:#fff;
+  color:var(--text);
+  border:1px solid var(--line);
 }
 
-.sum{
+.btn.secondary:hover{
+  background:var(--soft);
+}
+
+.btn.danger{
+  color:var(--danger);
+  border-color:#e5bdb9;
+}
+
+.upi-wrap{
+  flex:1 1 190px;
+  min-width:180px;
+  margin-left:auto;
+}
+
+.upi-wrap input{
+  width:100%;
+  min-height:40px;
+  border:1px solid var(--line);
+  border-radius:9px;
+  padding:9px 12px;
+  background:#fff;
+  color:var(--text);
+}
+
+/* =========================
+   INVOICE PAPER
+========================= */
+
+.invoice-paper{
+  background:var(--paper);
+  border-radius:14px;
+  box-shadow:var(--shadow);
+  overflow:hidden;
+}
+
+.invoice-inner{
+  padding:34px;
+}
+
+/* =========================
+   INVOICE HEADER
+========================= */
+
+.invoice-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:25px;
+  padding-bottom:5px;
+  border-bottom:3px solid var(--ink);
+}
+
+.brand-name{
+  font-size:29px;
+  line-height:1;
+  font-weight:900;
+  letter-spacing:-1px;
+  color:var(--ink);
+}
+
+.brand-sub{
+  margin-top:7px;
+  color:var(--muted);
+  font-size:12px;
+  font-weight:500;
+}
+
+.invoice-title{
+  text-align:right;
+  font-size:34px;
+  line-height:1;
+  font-weight:900;
+  letter-spacing:-1.3px;
+  color:var(--ink);
+}
+
+/* =========================
+   META STRIP
+========================= */
+
+.meta-grid{
   display:grid;
-  grid-template-columns:minmax(180px,38%) 1fr;
-  gap:20px;
-  margin-top:18px;
+  grid-template-columns:1.2fr 1fr 1fr;
+  gap:10px;
+  margin:20px 0;
 }
 
-.sum .bank textarea{
-  height:155px;
+.meta-card{
+  background:var(--soft);
+  border:1px solid var(--line);
+  border-radius:9px;
+  padding:10px 12px;
 }
 
-.tot div{
+.meta-label{
+  color:var(--muted);
+  font-size:10px;
+  font-weight:800;
+  text-transform:uppercase;
+  letter-spacing:.6px;
+  margin-bottom:5px;
+}
+
+.meta-card input{
+  width:100%;
+  border:0;
+  outline:0;
+  background:transparent;
+  color:var(--ink);
+  font-size:14px;
+  font-weight:750;
+  padding:0;
+}
+
+/* =========================
+   PARTIES
+========================= */
+
+.parties{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:16px;
+  margin-bottom:22px;
+}
+
+.party{
+  border:1px solid var(--line);
+  border-radius:11px;
+  overflow:hidden;
+}
+
+.party-head{
   display:flex;
   justify-content:space-between;
   align-items:center;
   gap:10px;
-  padding:6px 0;
+  padding:10px 7px;
+  background:#f4f6ee;
+  border-bottom:1px solid var(--line);
 }
 
-.tot .gstline{
-  display:grid;
-  grid-template-columns:1fr auto auto;
-}
-
-.tot select{
-  width:90px;
-}
-
-.tot .grand{
-  font-size:20px;
+.party-title{
+  color:var(--green-dark);
+  font-size:11px;
   font-weight:850;
-  border-top:2px solid #10120f;
-  margin-top:7px;
-  padding-top:11px;
+  text-transform:uppercase;
+  letter-spacing:.8px;
 }
 
-.nrow{
+.party-tag{
+  color:var(--muted);
+  font-size:10px;
+  font-weight:600;
+}
+
+.party-body{
+  padding:7px;
+}
+
+.field{
+  margin-bottom:10px;
+}
+
+.field:last-child{
+  margin-bottom:0;
+}
+
+.field label{
+  display:block;
+  margin-bottom:4px;
+  color:var(--muted);
+  font-size:10px;
+  font-weight:800;
+  text-transform:uppercase;
+  letter-spacing:.45px;
+}
+
+.field input,
+.field textarea,
+.field select{
+  width:100%;
+  border:1px solid #dce0d6;
+  border-radius:7px;
+  background:#fbfcf8;
+  color:var(--text);
+  padding:8px 9px;
+  font-size:13px;
+  line-height:1.35;
+}
+
+.field textarea{
+  min-height:58px;
+  resize:vertical;
+}
+
+.party-actions{
   display:flex;
-  gap:20px;
-  align-items:flex-end;
+  gap:6px;
   margin-top:8px;
 }
 
-.nt{
-  flex:1;
+.small-btn{
+  padding:6px 9px;
+  border-radius:7px;
+  background:#eef1e8;
+  border:1px solid var(--line);
+  color:var(--green-dark);
+  font-size:11px;
+  font-weight:750;
 }
 
-.nt textarea{
-  min-height:75px;
+/* =========================
+   ITEMS
+========================= */
+
+.section-title{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:8px;
 }
 
-.qrbox{
-  width:160px;
-  flex:none;
+.section-title strong{
+  font-size:13px;
+  font-weight:850;
+  color:var(--ink);
+}
+
+.section-title span{
+  color:var(--muted);
+  font-size:10px;
+}
+
+.items-wrap{
+  border:1px solid var(--line);
+  border-radius:10px;
+  overflow:hidden;
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+}
+
+thead th{
+  background:var(--ink);
+  color:#fff;
+  padding:10px 9px;
+  text-align:left;
+  font-size:10px;
+  font-weight:800;
+  text-transform:uppercase;
+  letter-spacing:.45px;
+}
+
+tbody td{
+  padding:7px 6px;
+  border-bottom:1px solid #edf0e9;
+  vertical-align:middle;
+}
+
+tbody tr:last-child td{
+  border-bottom:0;
+}
+
+.item-desc{
+  width:auto;
+}
+
+.item-qty{
+  width:75px;
+}
+
+.item-rate{
+  width:125px;
+}
+
+.item-amount{
+  width:130px;
+  text-align:right;
+  font-weight:800;
+  white-space:nowrap;
+}
+
+.item-remove{
+  width:42px;
+}
+
+.items-wrap input{
+  width:100%;
+  border:1px solid #e0e3dc;
+  background:#fbfcf8;
+  border-radius:6px;
+  padding:7px 8px;
+  color:var(--text);
+  font-size:12px;
+}
+
+.remove-btn{
+  width:30px;
+  height:30px;
+  border-radius:7px;
+  background:#f1f2ef;
+  color:#555;
+  font-size:14px;
+  font-weight:800;
+}
+
+.remove-btn:hover{
+  background:#fce9e7;
+  color:var(--danger);
+}
+
+/* =========================
+   BOTTOM AREA
+========================= */
+
+.bottom-grid{
+  display:grid;
+  grid-template-columns:1.2fr .8fr;
+  gap:18px;
+  margin-top:18px;
+}
+
+.payment-box,
+.summary-box{
+  border:1px solid var(--line);
+  border-radius:10px;
+  padding:14px;
+}
+
+.box-title{
+  color:var(--muted);
+  font-size:10px;
+  font-weight:850;
+  text-transform:uppercase;
+  letter-spacing:.6px;
+  margin-bottom:8px;
+}
+
+.payment-box textarea{
+  width:100%;
+  min-height:95px;
+  resize:vertical;
+  border:1px solid #dce0d6;
+  border-radius:7px;
+  background:#fbfcf8;
+  padding:8px 9px;
+  color:var(--text);
+  font-size:12px;
+  line-height:1.45;
+}
+
+.summary-row{
+  display:grid;
+  grid-template-columns:1fr auto;
+  align-items:center;
+  gap:12px;
+  padding:6px 0;
+  color:var(--muted);
+  font-size:12px;
+}
+
+.summary-row strong{
+  color:var(--text);
+  font-weight:800;
+}
+
+.gst-control{
+  display:flex;
+  justify-content:flex-end;
+  align-items:center;
+  gap:7px;
+}
+
+.gst-control select{
+  width:72px;
+  border:1px solid var(--line);
+  border-radius:6px;
+  padding:4px 5px;
+  background:#fff;
+  font-size:11px;
+}
+
+.total-row{
+  margin-top:8px;
+  padding-top:11px;
+  border-top:2px solid var(--ink);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+}
+
+.total-row span{
+  font-size:13px;
+  font-weight:850;
+}
+
+.total-row strong{
+  color:var(--green-dark);
+  font-size:22px;
+  font-weight:900;
+}
+
+/* =========================
+   NOTES + QR
+========================= */
+
+.notes-grid{
+  display:grid;
+  grid-template-columns:1fr 170px;
+  gap:18px;
+  margin-top:18px;
+  align-items:end;
+}
+
+.notes-box{
+  border:1px solid var(--line);
+  border-radius:10px;
+  padding:14px;
+}
+
+.notes-box textarea{
+  width:100%;
+  min-height:70px;
+  resize:vertical;
+  border:1px solid #dce0d6;
+  border-radius:7px;
+  background:#fbfcf8;
+  padding:8px 9px;
+  color:var(--text);
+  font-size:12px;
+  line-height:1.45;
+}
+
+.qr-area{
   text-align:center;
+  min-height:145px;
 }
 
 #qr{
   display:flex;
   justify-content:center;
+  align-items:center;
 }
 
 #qrcap{
-  font-size:11px;
-  color:#666;
   margin-top:5px;
+  color:var(--muted);
+  font-size:10px;
+  line-height:1.3;
 }
 
-.foot{
-  margin-top:18px;
-  padding-top:10px;
-  border-top:1px solid #eee;
+/* =========================
+   FOOTER
+========================= */
+
+.invoice-footer{
+  margin-top:22px;
+  padding-top:11px;
+  border-top:1px solid #ecefe8;
   text-align:center;
-  color:#777;
-  font-size:11px;
+  color:var(--muted);
+  font-size:10px;
 }
 
-.hint{
-  font-size:12px;
-  color:var(--mut);
-  line-height:1.5;
-  margin:9px 2px;
-}
+/* =========================
+   SAVED INVOICES
+========================= */
 
-.folderbar{
-  display:flex;
-  align-items:center;
-  gap:8px;
-  flex-wrap:wrap;
-  background:#fff;
-  border:1px solid var(--line);
-  border-radius:10px;
-  padding:10px 12px;
-  margin-bottom:12px;
-}
-
-.folderstatus{
-  font-size:12px;
-  color:var(--mut);
-  flex:1;
-  min-width:180px;
-}
-
-.folderstatus.ok{
-  color:#3f5d1f;
-  font-weight:700;
-}
-
-#hist{
+.history{
   display:none;
 }
 
-.item{
-  background:var(--card);
+.history-item{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:15px;
+  flex-wrap:wrap;
+  padding:14px;
+  margin-bottom:8px;
+  background:#fff;
   border:1px solid var(--line);
   border-radius:10px;
-  padding:13px;
-  margin-bottom:8px;
-  display:flex;
-  gap:12px;
-  align-items:center;
-  justify-content:space-between;
-  flex-wrap:wrap;
 }
 
-.item b{
+.history-info strong{
   display:block;
+  color:var(--ink);
+  font-size:13px;
   margin-bottom:3px;
 }
 
-.item span{
-  font-size:13px;
-  color:var(--mut);
+.history-info span{
+  color:var(--muted);
+  font-size:11px;
 }
 
-.btns{
+.history-buttons{
   display:flex;
   gap:6px;
 }
 
 .empty{
-  padding:35px 20px;
-  text-align:center;
-  color:var(--mut);
   background:#fff;
   border:1px dashed var(--line);
   border-radius:10px;
+  padding:40px 20px;
+  text-align:center;
+  color:var(--muted);
+  font-size:13px;
 }
+
+/* =========================
+   TOAST
+========================= */
 
 .toast{
   position:fixed;
   left:50%;
-  bottom:calc(20px + env(safe-area-inset-bottom));
+  bottom:20px;
   transform:translateX(-50%);
-  z-index:9999;
+  z-index:99999;
   display:none;
+  max-width:calc(100vw - 30px);
+  padding:11px 16px;
+  border-radius:9px;
   background:#10120f;
   color:#fff;
-  padding:11px 17px;
-  border-radius:9px;
-  font-size:13px;
-  font-weight:700;
-  max-width:calc(100vw - 30px);
+  font-size:12px;
+  font-weight:750;
   text-align:center;
-  box-shadow:0 8px 30px #0003;
+  box-shadow:0 8px 30px rgba(0,0,0,.22);
 }
 
-.paper.pdf{
-  box-shadow:none;
-  border-radius:0;
+/* =========================
+   PDF MODE
+   SAME DESIGN AS SCREEN
+========================= */
+
+.pdf-mode{
+  box-shadow:none!important;
+  border-radius:0!important;
 }
 
-.paper.pdf .top{
-  border-color:#3f5d1f;
+/*
+  IMPORTANT:
+  Do NOT change invoice-inner padding here.
+  PDF uses the exact same 34px desktop
+  invoice spacing as the screen.
+*/
+
+.pdf-mode .invoice-inner{
+  padding:34px;
 }
 
-.paper.pdf .title{
-  color:#3f5d1f;
+/*
+  Editing controls disappear from PDF,
+  but the actual invoice structure remains
+  untouched.
+*/
+
+.pdf-mode .no-pdf{
+  display:none!important;
 }
 
-.paper.pdf th{
-  background:#b6e36b;
-  color:#10120f;
+/*
+  PDF field appearance uses the SAME
+  visual language as the actual fields.
+*/
+
+.pdf-field{
+  width:100%;
+  border:1px solid #dce0d6;
+  border-radius:7px;
+  background:#fbfcf8;
+  color:var(--text);
+  padding:8px 9px;
+  font-size:13px;
+  line-height:1.35;
+  white-space:pre-wrap;
+  overflow-wrap:anywhere;
+  min-height:34px;
 }
 
-.paper.pdf td{
-  border-color:#e4e7da;
+.pdf-field.meta-pdf-field{
+  border:0;
+  outline:0;
+  background:transparent;
+  color:var(--ink);
+  font-size:14px;
+  font-weight:750;
+  padding:0;
+  min-height:18px;
 }
 
-.paper.pdf .grand{
-  border-color:#3f5d1f;
-  color:#3f5d1f;
+.pdf-field.item-pdf-field{
+  border:1px solid #e0e3dc;
+  background:#fbfcf8;
+  border-radius:6px;
+  padding:7px 8px;
+  color:var(--text);
+  font-size:12px;
 }
 
-.paper.pdf label,
-.paper.pdf .brand small,
-.paper.pdf .foot{
-  color:#6b7160;
+.pdf-field.textarea-pdf-field{
+  min-height:58px;
+}
+
+.pdf-field.payment-pdf-field{
+  min-height:95px;
+  font-size:12px;
+  line-height:1.45;
+}
+
+.pdf-field.notes-pdf-field{
+  min-height:70px;
+  font-size:12px;
+  line-height:1.45;
 }
 
 .pdf-na{
-  color:#777;
+  color:#777!important;
   font-style:italic;
 }
 
-@media(max-width:700px){
-  .grid,
-  .sum{
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media(max-width:850px){
+
+  .invoice-inner{
+    padding:24px;
+  }
+
+  .invoice-header{
+    padding-bottom:16px;
+  }
+
+  .brand-name{
+    font-size:25px;
+  }
+
+  .invoice-title{
+    font-size:29px;
+  }
+
+  .meta-grid{
+    grid-template-columns:1fr 1fr 1fr;
+  }
+
+  .bottom-grid{
     grid-template-columns:1fr;
   }
 
-  .nrow{
-    flex-direction:column;
-    align-items:stretch;
-  }
-
-  .qrbox{
-    width:100%;
-  }
-
-  .paper{
-    padding:17px;
-  }
-
-  .title{
-    font-size:26px;
-  }
-
-  .brand{
-    font-size:22px;
-  }
 }
 
-@media(max-width:480px){
+@media(max-width:680px){
+
   body{
     padding-left:8px;
     padding-right:8px;
   }
 
-  .bar button{
-    flex:1 1 calc(50% - 8px);
+  .topbar{
+    align-items:stretch;
+    flex-direction:column;
   }
 
-  .bar input{
-    flex:1 1 100%;
-  }
-
-  .paper{
-    padding:13px;
-  }
-
-  .btns{
+  .tabs{
     width:100%;
   }
 
-  .btns button{
+  .tabs button{
     flex:1;
   }
+
+  .actionbar{
+    flex-direction:column;
+    align-items:stretch;
+  }
+
+  .actions{
+    width:100%;
+  }
+
+  .actions .btn{
+    flex:1;
+  }
+
+  .upi-wrap{
+    width:100%;
+    margin-left:0;
+  }
+
+  .invoice-inner{
+    padding:17px;
+  }
+
+  .invoice-header{
+    align-items:flex-start;
+  }
+
+  .brand-name{
+    font-size:23px;
+  }
+
+  .invoice-title{
+    font-size:25px;
+  }
+
+  .meta-grid{
+    grid-template-columns:1fr;
+    gap:7px;
+  }
+
+  .parties{
+    grid-template-columns:1fr;
+  }
+
+  .notes-grid{
+    grid-template-columns:1fr;
+  }
+
+  .qr-area{
+    min-height:auto;
+  }
+
+  .items-wrap{
+    overflow-x:auto;
+  }
+
+  table{
+    min-width:650px;
+  }
+
 }
 
+@media(max-width:430px){
+
+  .invoice-header{
+    gap:12px;
+  }
+
+  .brand-name{
+    font-size:21px;
+  }
+
+  .brand-sub{
+    font-size:10px;
+  }
+
+  .invoice-title{
+    font-size:22px;
+  }
+
+  .actions{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+  }
+
+  .actions .btn{
+    width:100%;
+  }
+
+}
+
+/* =========================
+   PRINT
+========================= */
+
 @media print{
+
   @page{
     size:A4;
     margin:0;
@@ -506,275 +958,577 @@ td{
     padding:0!important;
   }
 
-  .bar,
-  .tabs,
-  .folderbar,
-  #hist,
+  .topbar,
+  .actionbar,
+  .history,
   .toast,
-  .hint,
-  .x,
-  .nopdf{
+  .no-pdf{
     display:none!important;
   }
 
-  .paper{
+  .app{
+    max-width:none;
+  }
+
+  .invoice-paper{
     width:100%;
-    padding:15mm;
-    border-radius:0;
-    box-shadow:none;
+    border-radius:0!important;
+    box-shadow:none!important;
   }
 
-  .paper input,
-  .paper textarea,
-  .paper select{
-    border:0;
-    background:transparent;
-    padding:2px 0;
-    appearance:none;
+  .invoice-inner{
+    padding:14mm;
   }
 
-  .table-wrap{
+  .field input,
+  .field textarea,
+  .field select,
+  .payment-box textarea,
+  .notes-box textarea,
+  .meta-card input,
+  .items-wrap input{
+    border:0!important;
+    background:transparent!important;
+    padding:2px 0!important;
+  }
+
+  .items-wrap{
     overflow:visible;
   }
 
   table{
     min-width:0;
   }
+
 }
 </style>
 </head>
 
 <body>
 
-<div class="wrap">
+<div class="app">
 
-<div class="tabs">
-  <button id="tCreate" onclick="tab('create')">Create</button>
-  <button id="tHist" class="ghost" onclick="tab('hist')">Saved invoices</button>
-</div>
+  <div class="topbar">
 
-<div id="create">
+    <div class="app-title">
+      ShortBamboo Invoice Maker
+      <span>Private local invoice tool</span>
+    </div>
 
-<div class="bar">
-  <button onclick="addRow()">+ Add item</button>
-  <button id="saveBtn" onclick="saveInvoice()">Save invoice</button>
-  <button id="pdfBtn" onclick="savePdf()">Save PDF</button>
-  <button class="ghost" onclick="newInvoice()">New invoice</button>
-  <input
-    id="upi"
-    data-remember
-    placeholder="Your UPI ID"
-    aria-label="Your UPI ID"
-    oninput="calc()"
-  >
-</div>
+    <div class="tabs">
 
-<div class="paper" id="invoicePaper">
+      <button
+        id="tabCreate"
+        class="active"
+        onclick="switchTab('create')">
+        Create
+      </button>
 
-<div class="top">
-  <div class="brand">
-    ShortBamboo
-    <small>Creator Marketing Agency · hello@shortbamboo.com</small>
+      <button
+        id="tabHistory"
+        onclick="switchTab('history')">
+        Saved invoices
+      </button>
+
+    </div>
+
   </div>
 
-  <div class="title">INVOICE</div>
+
+  <section id="createView">
+
+    <div class="actionbar">
+
+      <div class="actions">
+
+        <button
+          class="btn"
+          onclick="addItem()">
+          + Add item
+        </button>
+
+        <button
+          class="btn"
+          onclick="saveInvoice()">
+          Save invoice
+        </button>
+
+        <button
+          id="pdfButton"
+          class="btn"
+          onclick="savePDF()">
+          Save PDF
+        </button>
+
+        <button
+          class="btn secondary"
+          onclick="newInvoice()">
+          New invoice
+        </button>
+
+      </div>
+
+      <div class="upi-wrap">
+
+        <input
+          id="upi"
+          data-remember
+          placeholder="UPI ID for payment QR"
+          autocomplete="off"
+          oninput="calculate()"
+        >
+
+      </div>
+
+    </div>
+
+
+    <div
+      id="invoicePaper"
+      class="invoice-paper">
+
+      <div class="invoice-inner">
+
+
+        <div class="invoice-header">
+
+          <div>
+
+            <div class="brand-name">
+              ShortBamboo
+            </div>
+
+            <div class="brand-sub">
+              Creator Marketing Agency · ShortBamboo.com · hello@shortbamboo.com
+            </div>
+
+          </div>
+
+          <div class="invoice-title">
+            INVOICE
+          </div>
+
+        </div>
+
+
+        <div class="meta-grid">
+
+          <div class="meta-card">
+
+            <div class="meta-label">
+              Invoice Number
+            </div>
+
+            <input
+              id="invoiceNo"
+              placeholder="SB-2026-001"
+            >
+
+          </div>
+
+          <div class="meta-card">
+
+            <div class="meta-label">
+              Invoice Date
+            </div>
+
+            <input
+              id="invoiceDate"
+              type="date"
+            >
+
+          </div>
+
+          <div class="meta-card">
+
+            <div class="meta-label">
+              Due Date
+            </div>
+
+            <input
+              id="dueDate"
+              type="date"
+            >
+
+          </div>
+
+        </div>
+
+
+        <div class="parties">
+
+
+          <div class="party">
+
+            <div class="party-head">
+
+              <span class="party-title">
+                Bill From
+              </span>
+
+              <span class="party-tag">
+                Our details
+              </span>
+
+            </div>
+
+            <div class="party-body">
+
+              <div class="field">
+
+                <label>
+                  Business
+                </label>
+
+                <input
+                  value="ShortBamboo"
+                  readonly
+                >
+
+              </div>
+
+              <div class="field">
+
+                <label for="ourPan">
+                  Our PAN
+                </label>
+
+                <input
+                  id="ourPan"
+                  data-remember
+                  maxlength="10"
+                  placeholder="Optional"
+                  style="text-transform:uppercase"
+                >
+
+              </div>
+
+              <div class="field">
+
+                <label for="ourGstin">
+                  Our GSTIN
+                </label>
+
+                <input
+                  id="ourGstin"
+                  data-remember
+                  maxlength="15"
+                  placeholder="Optional"
+                  style="text-transform:uppercase"
+                >
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <div class="party">
+
+            <div class="party-head">
+
+              <span class="party-title">
+                Bill To
+              </span>
+
+              <span class="party-tag">
+                Client / Brand
+              </span>
+
+            </div>
+
+            <div class="party-body">
+
+              <div class="field">
+
+                <label for="clientName">
+                  Client / Brand
+                </label>
+
+                <input
+                  id="clientName"
+                  list="clientList"
+                  placeholder="Client or brand name"
+                  autocomplete="off"
+                  onchange="loadClient()"
+                >
+
+                <datalist id="clientList"></datalist>
+
+                <div class="party-actions no-pdf">
+
+                  <button
+                    class="small-btn"
+                    onclick="saveClient()">
+                    Save client
+                  </button>
+
+                  <button
+                    id="deleteClientButton"
+                    class="small-btn"
+                    onclick="deleteClient(this)">
+                    Delete client
+                  </button>
+
+                </div>
+
+              </div>
+
+              <div class="field">
+
+                <label for="clientAddress">
+                  Client Address
+                </label>
+
+                <textarea
+                  id="clientAddress"
+                  placeholder="Optional"
+                ></textarea>
+
+              </div>
+
+              <div class="field">
+
+                <label for="clientPan">
+                  Client PAN
+                </label>
+
+                <input
+                  id="clientPan"
+                  maxlength="10"
+                  placeholder="Optional"
+                  style="text-transform:uppercase"
+                >
+
+              </div>
+
+              <div class="field">
+
+                <label for="clientGstin">
+                  Client GSTIN
+                </label>
+
+                <input
+                  id="clientGstin"
+                  maxlength="15"
+                  placeholder="Optional"
+                  style="text-transform:uppercase"
+                >
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div class="section-title">
+
+          <strong>
+            Services / Campaign Items
+          </strong>
+
+          <span>
+            Creator marketing services
+          </span>
+
+        </div>
+
+        <div class="items-wrap">
+
+          <table>
+
+            <thead>
+
+              <tr>
+
+                <th>
+                  Description
+                </th>
+
+                <th class="item-qty">
+                  Qty
+                </th>
+
+                <th class="item-rate">
+                  Rate (₹)
+                </th>
+
+                <th class="item-amount">
+                  Amount
+                </th>
+
+                <th class="item-remove no-pdf">
+                </th>
+
+              </tr>
+
+            </thead>
+
+            <tbody id="itemsBody"></tbody>
+
+          </table>
+
+        </div>
+
+
+        <div class="bottom-grid">
+
+
+          <div class="payment-box">
+
+            <div class="box-title">
+              Payment Details
+            </div>
+
+            <textarea
+              id="paymentDetails"
+              data-remember
+              placeholder="Bank name&#10;Account holder&#10;Account number&#10;IFSC"
+            ></textarea>
+
+          </div>
+
+
+          <div class="summary-box">
+
+            <div class="box-title">
+              Invoice Summary
+            </div>
+
+            <div class="summary-row">
+
+              <span>
+                Subtotal
+              </span>
+
+              <strong id="subtotal">
+                ₹0.00
+              </strong>
+
+            </div>
+
+
+            <div class="summary-row">
+
+              <span>
+                GST
+              </span>
+
+              <div class="gst-control">
+
+                <select
+                  id="gstRate"
+                  onchange="calculate()">
+
+                  <option value="0">
+                    None
+                  </option>
+
+                  <option value="5">
+                    5%
+                  </option>
+
+                  <option value="12">
+                    12%
+                  </option>
+
+                  <option value="18">
+                    18%
+                  </option>
+
+                </select>
+
+                <strong id="gstAmount">
+                  ₹0.00
+                </strong>
+
+              </div>
+
+            </div>
+
+
+            <div class="total-row">
+
+              <span>
+                Total
+              </span>
+
+              <strong id="grandTotal">
+                ₹0.00
+              </strong>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div class="notes-grid">
+
+
+          <div class="notes-box">
+
+            <div class="box-title">
+              Notes
+            </div>
+
+            <textarea
+              id="notes"
+              data-remember
+              placeholder="Payment terms, campaign notes, etc."
+            ></textarea>
+
+          </div>
+
+
+          <div class="qr-area">
+
+            <div id="qr"></div>
+
+            <div id="qrcap"></div>
+
+          </div>
+
+        </div>
+
+
+        <div class="invoice-footer">
+
+          This is a computer-generated invoice.
+          <br>
+          ShortBamboo · Creator Marketing Agency
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <section
+    id="historyView"
+    class="history">
+
+    <div id="historyList"></div>
+
+  </section>
+
 </div>
 
-<div class="grid">
 
-<!-- BILL TO -->
-<div>
-
-  <label for="cname">Bill to</label>
-
-  <input
-    id="cname"
-    list="clients"
-    placeholder="Client or brand name"
-    autocomplete="off"
-    onchange="pickClient()"
-  >
-
-  <datalist id="clients"></datalist>
-
-  <div class="mini nopdf">
-    <button onclick="saveClient()">Save client</button>
-    <button onclick="delClient(this)">Delete client</button>
-  </div>
-
-  <label for="caddr">Client address</label>
-  <textarea
-    id="caddr"
-    placeholder="Client billing address"
-  ></textarea>
-
-  <label for="cpan">Client PAN</label>
-  <input
-    id="cpan"
-    maxlength="10"
-    placeholder="ABCDE1234F"
-    style="text-transform:uppercase"
-  >
-
-  <label for="cgst">Client GSTIN</label>
-  <input
-    id="cgst"
-    maxlength="15"
-    placeholder="Optional"
-    style="text-transform:uppercase"
-  >
-
+<div
+  id="toast"
+  class="toast">
 </div>
 
-<!-- OUR DETAILS + INVOICE DETAILS -->
-<div>
 
-  <label for="no">Invoice no.</label>
-  <input
-    id="no"
-    oninput="calc()"
-    placeholder="SB-2026-001"
-  >
-
-  <label for="date">Invoice date</label>
-  <input
-    id="date"
-    type="date"
-  >
-
-  <label for="due">Due date</label>
-  <input
-    id="due"
-    type="date"
-  >
-
-  <label for="pan">Our PAN</label>
-  <input
-    id="pan"
-    data-remember
-    maxlength="10"
-    placeholder="ABCDE1234F"
-    style="text-transform:uppercase"
-  >
-
-  <label for="mgst">Our GSTIN</label>
-  <input
-    id="mgst"
-    data-remember
-    maxlength="15"
-    placeholder="Optional"
-    style="text-transform:uppercase"
-  >
-
-</div>
-
-</div>
-
-<div class="table-wrap">
-
-<table>
-
-<thead>
-<tr>
-  <th>Description</th>
-  <th class="q">Qty</th>
-  <th class="r">Rate (₹)</th>
-  <th class="a">Amount</th>
-  <th class="x"></th>
-</tr>
-</thead>
-
-<tbody id="rows"></tbody>
-
-</table>
-
-</div>
-
-<div class="sum">
-
-<div class="bank">
-
-  <label for="pay">Payment details</label>
-
-  <textarea
-    id="pay"
-    data-remember
-    placeholder="Bank name&#10;Account holder&#10;Account number&#10;IFSC"
-  ></textarea>
-
-</div>
-
-<div class="tot">
-
-  <div>
-    <span>Subtotal</span>
-    <span id="sub">₹0.00</span>
-  </div>
-
-  <div class="gstline">
-    <span>GST</span>
-
-    <select id="gst" onchange="calc()">
-      <option value="0">None</option>
-      <option value="5">5%</option>
-      <option value="12">12%</option>
-      <option value="18">18%</option>
-    </select>
-
-    <span id="gstamt">₹0.00</span>
-  </div>
-
-  <div class="grand">
-    <span>Total</span>
-    <span id="total">₹0.00</span>
-  </div>
-
-</div>
-
-</div>
-
-<div class="nrow">
-
-<div class="nt">
-
-  <label for="notes">Notes</label>
-
-  <textarea
-    id="notes"
-    data-remember
-    placeholder="Payment terms, campaign notes, etc."
-  ></textarea>
-
-</div>
-
-<div class="qrbox">
-  <div id="qr"></div>
-  <div id="qrcap"></div>
-</div>
-
-</div>
-
-<div class="foot">
-  This is a computer-generated invoice.
-</div>
-
-</div>
-
-<p class="hint">
-  Invoice data is stored locally in this browser.
-  Your selected PDF folder is used only when the browser supports folder access.
-  No backend is required.
-</p>
-
-</div>
-
-<div id="hist"></div>
-
-</div>
-
-<div class="toast" id="toast"></div>
-
-<!-- PDF + QR LIBRARIES -->
 <script
   src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"
   crossorigin="anonymous"
@@ -787,77 +1541,100 @@ td{
   referrerpolicy="no-referrer">
 </script>
 
+
 <script>
 
-const $ = id => document.getElementById(id);
+const STORAGE_KEY =
+  'shortbamboo_invoice_v5';
 
-const KEY = 'sb_invoice_v3';
-const FOLDER_DB = 'sb_invoice_folder_v1';
+let database =
+  loadDatabase();
 
-let db = readDB();
-let currentInvoiceId = null;
-let lastQr = null;
-let folderHandle = null;
+let currentInvoiceId =
+  null;
+
+let lastQRCode =
+  null;
 
 
 /* =========================
    DATABASE
 ========================= */
 
-function baseDB(){
+function baseDatabase(){
+
   return {
-    version:3,
-    settings:{},
+    version:5,
     counter:1,
+    settings:{},
     clients:{},
     invoices:[]
   };
+
 }
 
-function readDB(){
+function loadDatabase(){
 
   try{
 
-    const x = localStorage.getItem(KEY);
+    const raw =
+      localStorage.getItem(
+        STORAGE_KEY
+      );
 
-    if(!x){
-      return baseDB();
-    }
+    if(!raw)
+      return baseDatabase();
 
-    const p = JSON.parse(x);
+    const parsed =
+      JSON.parse(raw);
 
     return {
-      ...baseDB(),
-      ...p,
-      settings:p.settings || {},
-      clients:p.clients || {},
-      invoices:Array.isArray(p.invoices)
-        ? p.invoices
-        : []
+      ...baseDatabase(),
+      ...parsed,
+      settings:
+        parsed.settings || {},
+      clients:
+        parsed.clients || {},
+      invoices:
+        Array.isArray(parsed.invoices)
+          ? parsed.invoices
+          : []
     };
 
-  }catch(e){
+  }catch(error){
 
-    return baseDB();
+    console.error(
+      'Database load error:',
+      error
+    );
+
+    return baseDatabase();
 
   }
 
 }
 
-function persist(){
+function saveDatabase(){
 
   try{
 
     localStorage.setItem(
-      KEY,
-      JSON.stringify(db)
+      STORAGE_KEY,
+      JSON.stringify(database)
     );
 
     return true;
 
-  }catch(e){
+  }catch(error){
 
-    toast('Browser storage unavailable');
+    console.error(
+      'Database save error:',
+      error
+    );
+
+    showToast(
+      'Browser storage unavailable'
+    );
 
     return false;
 
@@ -867,239 +1644,116 @@ function persist(){
 
 
 /* =========================
-   UTILITIES
+   HELPERS
 ========================= */
 
-function toast(m){
+function $(id){
 
-  const t = $('toast');
+  return document.getElementById(id);
 
-  t.textContent = m;
-  t.style.display = 'block';
+}
 
-  clearTimeout(toast.t);
+function showToast(message){
 
-  toast.t = setTimeout(
-    () => t.style.display = 'none',
-    2300
+  const toast =
+    $('toast');
+
+  toast.textContent =
+    message;
+
+  toast.style.display =
+    'block';
+
+  clearTimeout(
+    showToast.timer
   );
 
-}
-
-function inr(n){
-
-  return '₹' + (Number(n)||0).toLocaleString(
-    'en-IN',
-    {
-      minimumFractionDigits:2,
-      maximumFractionDigits:2
-    }
-  );
-
-}
-
-function isoDay(d){
-
-  const x = new Date(d);
-
-  x.setMinutes(
-    x.getMinutes() -
-    x.getTimezoneOffset()
-  );
-
-  return x.toISOString().slice(0,10);
-
-}
-
-function fmtDate(v){
-
-  if(!v) return '';
-
-  const p = v.split('-');
-
-  return p.length === 3
-    ? `${p[2]}/${p[1]}/${p[0]}`
-    : v;
-
-}
-
-function autoNo(){
-
-  return 'SB-' +
-    new Date().getFullYear() +
-    '-' +
-    String(db.counter).padStart(3,'0');
-
-}
-
-function uid(){
-
-  return 'inv_' +
-    Date.now().toString(36) +
-    '_' +
-    Math.random().toString(36).slice(2,8);
-
-}
-
-
-/* =========================
-   LINE ITEMS
-========================= */
-
-function addRow(d = {}){
-
-  const tr = document.createElement('tr');
-
-  tr.innerHTML = `
-    <td>
-      <input
-        class="d"
-        placeholder="e.g. 5 creator reels"
-      >
-    </td>
-
-    <td class="q">
-      <input
-        class="qt"
-        type="number"
-        min="0"
-        step="1"
-      >
-    </td>
-
-    <td class="r">
-      <input
-        class="rt"
-        type="number"
-        min="0"
-        step="0.01"
-      >
-    </td>
-
-    <td class="a">
-      ₹0.00
-    </td>
-
-    <td class="x">
-      <button type="button">✕</button>
-    </td>
-  `;
-
-  tr.querySelector('.d').value =
-    d.d || '';
-
-  tr.querySelector('.qt').value =
-    d.q == null ? 1 : d.q;
-
-  tr.querySelector('.rt').value =
-    d.r == null ? 0 : d.r;
-
-  tr.addEventListener(
-    'input',
-    calc
-  );
-
-  tr.querySelector('.x button').onclick =
-    () => {
-
-      if(
-        document.querySelectorAll(
-          '#rows tr'
-        ).length <= 1
-      ){
-
-        toast(
-          'At least one item is required'
-        );
-
-        return;
-      }
-
-      tr.remove();
-
-      calc();
-
-    };
-
-  $('rows').appendChild(tr);
-
-  calc();
-
-}
-
-function items(){
-
-  return [
-    ...document.querySelectorAll(
-      '#rows tr'
-    )
-  ].map(tr => ({
-    d:tr.querySelector('.d').value.trim(),
-    q:Number(
-      tr.querySelector('.qt').value
-    ) || 0,
-    r:Number(
-      tr.querySelector('.rt').value
-    ) || 0
-  }));
-
-}
-
-function totals(list,g){
-
-  const subtotal =
-    list.reduce(
-      (a,x) => a + x.q * x.r,
-      0
+  showToast.timer =
+    setTimeout(
+      ()=>{
+        toast.style.display =
+          'none';
+      },
+      2400
     );
 
-  const gst =
-    subtotal *
-    (Number(g)||0) /
-    100;
+}
 
-  return {
-    subtotal,
-    gst,
-    total:subtotal + gst
-  };
+function formatINR(value){
+
+  return '₹' +
+    (
+      Number(value)||0
+    ).toLocaleString(
+      'en-IN',
+      {
+        minimumFractionDigits:2,
+        maximumFractionDigits:2
+      }
+    );
 
 }
 
-function calc(){
+function formatDate(value){
 
-  document
-    .querySelectorAll('#rows tr')
-    .forEach(tr => {
+  if(!value)
+    return '';
 
-      const amount =
-        (Number(
-          tr.querySelector('.qt').value
-        ) || 0) *
-        (Number(
-          tr.querySelector('.rt').value
-        ) || 0);
+  const parts =
+    value.split('-');
 
-      tr.querySelector('.a')
-        .textContent = inr(amount);
+  if(parts.length !== 3)
+    return value;
 
-    });
-
-  const t = totals(
-    items(),
-    $('gst').value
+  return (
+    parts[2] +
+    '/' +
+    parts[1] +
+    '/' +
+    parts[0]
   );
 
-  $('sub').textContent =
-    inr(t.subtotal);
+}
 
-  $('gstamt').textContent =
-    inr(t.gst);
+function dateISO(date){
 
-  $('total').textContent =
-    inr(t.total);
+  const d =
+    new Date(date);
 
-  drawQr(t.total);
+  d.setMinutes(
+    d.getMinutes() -
+    d.getTimezoneOffset()
+  );
+
+  return d
+    .toISOString()
+    .slice(0,10);
+
+}
+
+function generateInvoiceNumber(){
+
+  return (
+    'SB-' +
+    new Date().getFullYear() +
+    '-' +
+    String(
+      database.counter
+    ).padStart(3,'0')
+  );
+
+}
+
+function generateId(){
+
+  return (
+    'invoice_' +
+    Date.now().toString(36) +
+    '_' +
+    Math.random()
+      .toString(36)
+      .slice(2,8)
+  );
 
 }
 
@@ -1109,38 +1763,295 @@ function calc(){
 ========================= */
 
 document
-  .querySelectorAll('[data-remember]')
-  .forEach(el => {
+  .querySelectorAll(
+    '[data-remember]'
+  )
+  .forEach(
+    element=>{
 
-    if(
-      db.settings[el.id] != null
-    ){
+      if(
+        database.settings[
+          element.id
+        ] !== undefined
+      ){
 
-      el.value =
-        db.settings[el.id];
+        element.value =
+          database.settings[
+            element.id
+          ];
+
+      }
+
+      element.addEventListener(
+        'input',
+        ()=>{
+          database.settings[
+            element.id
+          ] =
+            element.value;
+
+          saveDatabase();
+        }
+      );
 
     }
+  );
 
-    el.addEventListener(
-      'input',
-      () => {
 
-        db.settings[el.id] =
-          el.value;
+/* =========================
+   ITEMS
+========================= */
 
-        persist();
+function addItem(item={}){
+
+  const row =
+    document.createElement(
+      'tr'
+    );
+
+  row.innerHTML = `
+
+    <td class="item-desc">
+
+      <input
+        class="item-description"
+        placeholder="e.g. Creator reels / UGC videos"
+      >
+
+    </td>
+
+    <td class="item-qty">
+
+      <input
+        class="item-quantity"
+        type="number"
+        min="0"
+        step="1"
+      >
+
+    </td>
+
+    <td class="item-rate">
+
+      <input
+        class="item-rate-input"
+        type="number"
+        min="0"
+        step="0.01"
+      >
+
+    </td>
+
+    <td class="item-amount">
+      ₹0.00
+    </td>
+
+    <td class="item-remove no-pdf">
+
+      <button
+        class="remove-btn"
+        type="button">
+        ×
+      </button>
+
+    </td>
+
+  `;
+
+  row.querySelector(
+    '.item-description'
+  ).value =
+    item.description || '';
+
+  row.querySelector(
+    '.item-quantity'
+  ).value =
+    item.quantity == null
+      ? 1
+      : item.quantity;
+
+  row.querySelector(
+    '.item-rate-input'
+  ).value =
+    item.rate == null
+      ? 0
+      : item.rate;
+
+  row
+    .querySelectorAll('input')
+    .forEach(
+      input=>{
+        input.addEventListener(
+          'input',
+          calculate
+        );
+      }
+    );
+
+  row.querySelector(
+    '.remove-btn'
+  ).addEventListener(
+    'click',
+    ()=>{
+      const rows =
+        document.querySelectorAll(
+          '#itemsBody tr'
+        );
+
+      if(rows.length <= 1){
+
+        showToast(
+          'At least one item is required'
+        );
+
+        return;
+
+      }
+
+      row.remove();
+
+      calculate();
+
+    }
+  );
+
+  $('itemsBody')
+    .appendChild(row);
+
+  calculate();
+
+}
+
+function getItems(){
+
+  return [
+    ...document.querySelectorAll(
+      '#itemsBody tr'
+    )
+  ].map(
+    row=>({
+
+      description:
+        row.querySelector(
+          '.item-description'
+        ).value.trim(),
+
+      quantity:
+        Number(
+          row.querySelector(
+            '.item-quantity'
+          ).value
+        ) || 0,
+
+      rate:
+        Number(
+          row.querySelector(
+            '.item-rate-input'
+          ).value
+        ) || 0
+
+    })
+  );
+
+}
+
+function calculateTotals(
+  items,
+  gstRate
+){
+
+  const subtotal =
+    items.reduce(
+      (total,item)=>
+        total +
+        (
+          item.quantity *
+          item.rate
+        ),
+      0
+    );
+
+  const gst =
+    subtotal *
+    (
+      Number(gstRate)||0
+    ) /
+    100;
+
+  return {
+    subtotal,
+    gst,
+    total:
+      subtotal + gst
+  };
+
+}
+
+
+/* =========================
+   CALCULATE
+========================= */
+
+function calculate(){
+
+  document
+    .querySelectorAll(
+      '#itemsBody tr'
+    )
+    .forEach(
+      row=>{
+
+        const quantity =
+          Number(
+            row.querySelector(
+              '.item-quantity'
+            ).value
+          ) || 0;
+
+        const rate =
+          Number(
+            row.querySelector(
+              '.item-rate-input'
+            ).value
+          ) || 0;
+
+        row.querySelector(
+          '.item-amount'
+        ).textContent =
+          formatINR(
+            quantity * rate
+          );
 
       }
     );
 
-  });
+  const totals =
+    calculateTotals(
+      getItems(),
+      $('gstRate').value
+    );
 
-if(
-  db.settings.notes == null
-){
+  $('subtotal')
+    .textContent =
+    formatINR(
+      totals.subtotal
+    );
 
-  $('notes').value =
-    'Payment due by the due date. Thank you for working with ShortBamboo.';
+  $('gstAmount')
+    .textContent =
+    formatINR(
+      totals.gst
+    );
+
+  $('grandTotal')
+    .textContent =
+    formatINR(
+      totals.total
+    );
+
+  generateQRCode(
+    totals.total
+  );
 
 }
 
@@ -1149,300 +2060,354 @@ if(
    CLIENTS
 ========================= */
 
-function renderClients(){
+function renderClientList(){
 
-  $('clients').innerHTML =
-    Object.keys(db.clients)
-      .sort()
-      .map(
-        n =>
-          `<option value="${n.replace(/"/g,'&quot;')}">`
-      )
-      .join('');
+  $('clientList').innerHTML =
+    Object.keys(
+      database.clients
+    )
+    .sort()
+    .map(
+      name=>
+        `<option value="${escapeHTMLAttribute(name)}"></option>`
+    )
+    .join('');
+
+}
+
+function escapeHTMLAttribute(value){
+
+  return String(value)
+    .replace(/&/g,'&amp;')
+    .replace(/"/g,'&quot;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;');
 
 }
 
 function saveClient(){
 
-  const n =
-    $('cname').value.trim();
+  const name =
+    $('clientName')
+      .value
+      .trim();
 
-  if(!n){
+  if(!name){
 
-    toast(
-      'Pehle client ka naam daalo'
+    showToast(
+      'Client / brand name daalo'
     );
 
     return;
+
   }
 
-  db.clients[n] = {
+  database.clients[name] = {
 
-    addr:
-      $('caddr').value.trim(),
+    address:
+      normalizeOptional(
+        $('clientAddress').value
+      ),
 
     pan:
-      $('cpan').value
-        .trim()
-        .toUpperCase(),
+      normalizeOptional(
+        $('clientPan')
+          .value
+          .toUpperCase()
+      ),
 
-    gst:
-      $('cgst').value
-        .trim()
-        .toUpperCase()
+    gstin:
+      normalizeOptional(
+        $('clientGstin')
+          .value
+          .toUpperCase()
+      )
 
   };
 
-  persist();
+  saveDatabase();
 
-  renderClients();
+  renderClientList();
 
-  toast('Client saved');
+  showToast(
+    'Client saved'
+  );
 
 }
 
-function delClient(b){
+function loadClient(){
 
-  const n =
-    $('cname').value.trim();
+  const name =
+    $('clientName')
+      .value
+      .trim();
 
-  if(!db.clients[n]){
+  const client =
+    database.clients[name];
 
-    toast(
-      'Ye client saved nahi hai'
+  if(!client)
+    return;
+
+  $('clientAddress').value =
+    client.address || '';
+
+  $('clientPan').value =
+    client.pan || '';
+
+  $('clientGstin').value =
+    client.gstin || '';
+
+}
+
+function deleteClient(button){
+
+  const name =
+    $('clientName')
+      .value
+      .trim();
+
+  if(
+    !database.clients[name]
+  ){
+
+    showToast(
+      'Saved client nahi mila'
     );
 
     return;
+
   }
 
   if(
-    b.dataset.arm !== '1'
+    button.dataset.confirmed !== '1'
   ){
 
-    b.dataset.arm = '1';
+    button.dataset.confirmed =
+      '1';
 
-    b.textContent =
+    button.textContent =
       'Tap again';
 
     setTimeout(
-      () => {
+      ()=>{
+        button.dataset.confirmed =
+          '';
 
-        b.dataset.arm = '';
-
-        b.textContent =
+        button.textContent =
           'Delete client';
-
       },
       3000
     );
 
     return;
+
   }
 
-  delete db.clients[n];
+  delete database.clients[name];
 
-  persist();
+  saveDatabase();
 
-  renderClients();
+  renderClientList();
 
-  b.dataset.arm = '';
+  button.dataset.confirmed =
+    '';
 
-  b.textContent =
+  button.textContent =
     'Delete client';
 
-  toast('Client deleted');
-
-}
-
-function pickClient(){
-
-  const c =
-    db.clients[
-      $('cname').value
-    ];
-
-  if(c){
-
-    $('caddr').value =
-      c.addr || '';
-
-    $('cpan').value =
-      c.pan || '';
-
-    $('cgst').value =
-      c.gst || '';
-
-  }
+  showToast(
+    'Client deleted'
+  );
 
 }
 
 
 /* =========================
-   FORM
+   OPTIONAL FIELDS
 ========================= */
 
-function readForm(){
+function normalizeOptional(value){
+
+  const cleaned =
+    String(value || '')
+      .trim();
+
+  if(!cleaned)
+    return '';
+
+  const upper =
+    cleaned.toUpperCase();
+
+  if(
+    upper === 'OPTIONAL' ||
+    upper === 'N/A' ||
+    upper === 'NA' ||
+    upper === '-'
+  ){
+
+    return '';
+
+  }
+
+  return cleaned;
+
+}
+
+
+/* =========================
+   READ FORM
+========================= */
+
+function readInvoice(){
 
   return {
 
     id:
       currentInvoiceId,
 
-    no:
-      $('no').value.trim(),
+    invoiceNo:
+      $('invoiceNo')
+        .value
+        .trim(),
 
-    date:
-      $('date').value,
+    invoiceDate:
+      $('invoiceDate').value,
 
-    due:
-      $('due').value,
+    dueDate:
+      $('dueDate').value,
 
-    cname:
-      $('cname').value.trim(),
+    clientName:
+      $('clientName')
+        .value
+        .trim(),
 
-    caddr:
-      $('caddr').value.trim(),
+    clientAddress:
+      normalizeOptional(
+        $('clientAddress').value
+      ),
 
-    cpan:
-      $('cpan').value
-        .trim()
-        .toUpperCase(),
+    clientPan:
+      normalizeOptional(
+        $('clientPan')
+          .value
+          .toUpperCase()
+      ),
 
-    cgst:
-      $('cgst').value
-        .trim()
-        .toUpperCase(),
+    clientGstin:
+      normalizeOptional(
+        $('clientGstin')
+          .value
+          .toUpperCase()
+      ),
 
-    pan:
-      $('pan').value
-        .trim()
-        .toUpperCase(),
+    ourPan:
+      normalizeOptional(
+        $('ourPan')
+          .value
+          .toUpperCase()
+      ),
 
-    mgst:
-      $('mgst').value
-        .trim()
-        .toUpperCase(),
+    ourGstin:
+      normalizeOptional(
+        $('ourGstin')
+          .value
+          .toUpperCase()
+      ),
 
     upi:
-      $('upi').value.trim(),
+      normalizeOptional(
+        $('upi').value
+      ),
 
-    pay:
-      $('pay').value.trim(),
+    paymentDetails:
+      normalizeOptional(
+        $('paymentDetails').value
+      ),
 
     notes:
-      $('notes').value.trim(),
+      normalizeOptional(
+        $('notes').value
+      ),
 
-    gst:
-      $('gst').value,
+    gstRate:
+      $('gstRate').value,
 
     items:
-      items(),
+      getItems(),
 
-    saved:
+    savedAt:
       Date.now()
 
   };
 
 }
 
-function valid(o){
 
-  if(!o.no){
+/* =========================
+   VALIDATION
+========================= */
 
-    toast(
+function validateInvoice(invoice){
+
+  if(!invoice.invoiceNo){
+
+    showToast(
       'Invoice number daalo'
     );
 
-    $('no').focus();
+    $('invoiceNo').focus();
 
     return false;
+
   }
 
-  if(!o.cname){
+  if(!invoice.invoiceDate){
 
-    toast(
-      'Client name daalo'
-    );
-
-    $('cname').focus();
-
-    return false;
-  }
-
-  if(
-    !o.date ||
-    !o.due
-  ){
-
-    toast(
-      'Invoice aur due date select karo'
+    showToast(
+      'Invoice date select karo'
     );
 
     return false;
+
   }
 
-  if(
-    !o.items.some(
-      x =>
-        x.d &&
-        x.q > 0 &&
-        x.r >= 0
-    )
-  ){
+  if(!invoice.dueDate){
 
-    toast(
-      'Item description, quantity aur rate check karo'
+    showToast(
+      'Due date select karo'
     );
 
     return false;
+
   }
 
-  if(
-    o.pan &&
-    o.pan.length !== 10
-  ){
+  if(!invoice.clientName){
 
-    toast(
-      'Our PAN number check karo'
+    showToast(
+      'Client / brand name daalo'
+    );
+
+    $('clientName').focus();
+
+    return false;
+
+  }
+
+  const validItem =
+    invoice.items.some(
+      item=>
+        item.description &&
+        item.quantity > 0
+    );
+
+  if(!validItem){
+
+    showToast(
+      'Kam se kam ek item mein description aur quantity daalo'
     );
 
     return false;
-  }
 
-  if(
-    o.cpan &&
-    o.cpan.length !== 10
-  ){
-
-    toast(
-      'Client PAN number check karo'
-    );
-
-    return false;
-  }
-
-  if(
-    o.cgst &&
-    o.cgst.length !== 15
-  ){
-
-    toast(
-      'Client GSTIN check karo'
-    );
-
-    return false;
-  }
-
-  if(
-    o.mgst &&
-    o.mgst.length !== 15
-  ){
-
-    toast(
-      'Our GSTIN check karo'
-    );
-
-    return false;
   }
 
   return true;
@@ -1451,73 +2416,82 @@ function valid(o){
 
 
 /* =========================
-   LOAD / NEW INVOICE
+   FILL FORM
 ========================= */
 
-function fillForm(o){
+function fillInvoice(invoice){
 
   currentInvoiceId =
-    o.id || null;
+    invoice.id || null;
 
-  $('no').value =
-    o.no || '';
+  $('invoiceNo').value =
+    invoice.invoiceNo || '';
 
-  $('date').value =
-    o.date || '';
+  $('invoiceDate').value =
+    invoice.invoiceDate || '';
 
-  $('due').value =
-    o.due || '';
+  $('dueDate').value =
+    invoice.dueDate || '';
 
-  $('cname').value =
-    o.cname || '';
+  $('clientName').value =
+    invoice.clientName || '';
 
-  $('caddr').value =
-    o.caddr || '';
+  $('clientAddress').value =
+    invoice.clientAddress || '';
 
-  $('cpan').value =
-    o.cpan || '';
+  $('clientPan').value =
+    invoice.clientPan || '';
 
-  $('cgst').value =
-    o.cgst || '';
+  $('clientGstin').value =
+    invoice.clientGstin || '';
 
-  $('pan').value =
-    o.pan ||
-    db.settings.pan ||
+  $('ourPan').value =
+    invoice.ourPan ||
+    database.settings.ourPan ||
     '';
 
-  $('mgst').value =
-    o.mgst ||
-    db.settings.mgst ||
+  $('ourGstin').value =
+    invoice.ourGstin ||
+    database.settings.ourGstin ||
     '';
 
   $('upi').value =
-    o.upi ||
-    db.settings.upi ||
+    invoice.upi ||
+    database.settings.upi ||
     '';
 
-  $('pay').value =
-    o.pay ||
-    db.settings.pay ||
+  $('paymentDetails').value =
+    invoice.paymentDetails ||
+    database.settings.paymentDetails ||
     '';
 
   $('notes').value =
-    o.notes || '';
+    invoice.notes ||
+    database.settings.notes ||
+    '';
 
-  $('gst').value =
-    o.gst || '0';
+  $('gstRate').value =
+    invoice.gstRate || '0';
 
-  $('rows').innerHTML = '';
+  $('itemsBody')
+    .innerHTML = '';
 
-  (
-    o.items &&
-    o.items.length
-      ? o.items
-      : [{}]
-  ).forEach(addRow);
+  const items =
+    Array.isArray(invoice.items) &&
+    invoice.items.length
+      ? invoice.items
+      : [{}];
 
-  calc();
+  items.forEach(addItem);
+
+  calculate();
 
 }
+
+
+/* =========================
+   NEW INVOICE
+========================= */
 
 function newInvoice(){
 
@@ -1527,49 +2501,50 @@ function newInvoice(){
   const due =
     new Date(
       now.getTime() +
-      7 * 86400000
+      7 * 24 * 60 * 60 * 1000
     );
 
-  currentInvoiceId =
-    null;
+  fillInvoice({
 
-  fillForm({
+    id:null,
 
-    no:
-      autoNo(),
+    invoiceNo:
+      generateInvoiceNumber(),
 
-    date:
-      isoDay(now),
+    invoiceDate:
+      dateISO(now),
 
-    due:
-      isoDay(due),
+    dueDate:
+      dateISO(due),
 
-    cname:'',
-    caddr:'',
-    cpan:'',
-    cgst:'',
+    clientName:'',
+    clientAddress:'',
+    clientPan:'',
+    clientGstin:'',
 
-    pan:
-      db.settings.pan || '',
+    ourPan:
+      database.settings.ourPan ||
+      '',
 
-    mgst:
-      db.settings.mgst || '',
+    ourGstin:
+      database.settings.ourGstin ||
+      '',
 
     upi:
-      db.settings.upi || '',
+      database.settings.upi ||
+      '',
 
-    pay:
-      db.settings.pay || '',
+    paymentDetails:
+      database.settings.paymentDetails ||
+      '',
 
     notes:
-      db.settings.notes ||
+      database.settings.notes ||
       'Payment due by the due date. Thank you for working with ShortBamboo.',
 
-    gst:'0',
+    gstRate:'0',
 
-    items:[
-      {}
-    ]
+    items:[{}]
 
   });
 
@@ -1577,94 +2552,119 @@ function newInvoice(){
 
 
 /* =========================
-   SAVE INVOICE
+   SAVE
 ========================= */
 
-function saveInvoice(
-  silent = false
-){
+function saveInvoice(){
 
-  const o =
-    readForm();
+  const invoice =
+    readInvoice();
 
   if(
-    !valid(o)
+    !validateInvoice(
+      invoice
+    )
   ){
 
     return false;
 
   }
 
-  let i =
-    o.id
-      ? db.invoices.findIndex(
-          x => x.id === o.id
-        )
-      : -1;
+  let index = -1;
 
-  if(i < 0){
+  if(invoice.id){
 
-    i =
-      db.invoices.findIndex(
-        x => x.no === o.no
+    index =
+      database.invoices.findIndex(
+        item =>
+          item.id ===
+          invoice.id
       );
 
   }
 
-  if(i >= 0){
+  if(index < 0){
 
-    o.id =
-      db.invoices[i].id ||
-      uid();
+    index =
+      database.invoices.findIndex(
+        item =>
+          item.invoiceNo ===
+          invoice.invoiceNo
+      );
 
-    db.invoices[i] =
-      o;
+  }
+
+  if(index >= 0){
+
+    invoice.id =
+      database.invoices[index].id ||
+      generateId();
+
+    database.invoices[index] =
+      invoice;
 
   }else{
 
-    o.id =
-      uid();
+    invoice.id =
+      generateId();
 
-    db.invoices.unshift(o);
+    database.invoices.unshift(
+      invoice
+    );
 
     if(
-      o.no === autoNo()
+      invoice.invoiceNo ===
+      generateInvoiceNumber()
     ){
 
-      db.counter++;
+      database.counter++;
 
     }
 
   }
 
   currentInvoiceId =
-    o.id;
+    invoice.id;
 
-  db.clients[o.cname] = {
+  database.clients[
+    invoice.clientName
+  ] = {
 
-    addr:o.caddr,
+    address:
+      invoice.clientAddress,
 
-    pan:o.cpan,
+    pan:
+      invoice.clientPan,
 
-    gst:o.cgst
+    gstin:
+      invoice.clientGstin
 
   };
 
-  persist();
+  database.settings.ourPan =
+    invoice.ourPan;
 
-  renderClients();
+  database.settings.ourGstin =
+    invoice.ourGstin;
 
-  renderHist();
+  database.settings.upi =
+    invoice.upi;
 
-  if(!silent){
+  database.settings.paymentDetails =
+    invoice.paymentDetails;
 
-    toast(
-      'Invoice ' +
-      o.no +
-      ' saved successfully'
-    );
+  database.settings.notes =
+    invoice.notes;
 
-  }
+  saveDatabase();
+
+  renderClientList();
+
+  renderHistory();
+
+  showToast(
+    'Invoice saved successfully'
+  );
 
   return true;
 
@@ -1672,181 +2672,219 @@ function saveInvoice(
 
 
 /* =========================
-   SAVED INVOICES
+   HISTORY
 ========================= */
 
-function renderHist(){
+function renderHistory(){
 
-  const h =
-    $('hist');
+  const container =
+    $('historyList');
 
-  if(
-    !db.invoices.length
-  ){
+  if(!database.invoices.length){
 
-    h.innerHTML =
-      '<div class="empty">' +
-      'No saved invoices yet.<br>' +
-      'Create your first invoice and tap Save invoice.' +
-      '</div>';
+    container.innerHTML = `
+      <div class="empty">
+        No saved invoices yet.
+        <br>
+        Create your first invoice and tap Save invoice.
+      </div>
+    `;
 
     return;
 
   }
 
-  h.innerHTML = '';
+  container.innerHTML =
+    '';
 
-  db.invoices.forEach(o => {
+  database.invoices.forEach(
+    invoice=>{
 
-    const t =
-      totals(
-        o.items || [],
-        o.gst
-      );
-
-    const d =
-      document.createElement(
-        'div'
-      );
-
-    d.className =
-      'item';
-
-    d.innerHTML =
-      '<div>' +
-        '<b></b>' +
-        '<span></span>' +
-      '</div>' +
-
-      '<div class="btns">' +
-        '<button>Open</button>' +
-        '<button class="ghost">PDF</button>' +
-        '<button class="ghost danger">Delete</button>' +
-      '</div>';
-
-    d.querySelector('b')
-      .textContent =
-        o.no +
-        ' · ' +
-        o.cname;
-
-    d.querySelector('span')
-      .textContent =
-        fmtDate(o.date) +
-        ' · ' +
-        inr(t.total);
-
-    const bs =
-      d.querySelectorAll(
-        'button'
-      );
-
-    bs[0].onclick =
-      () => {
-
-        fillForm(o);
-
-        tab('create');
-
-        scrollTo({
-          top:0,
-          behavior:'smooth'
-        });
-
-      };
-
-    bs[1].onclick =
-      () => {
-
-        fillForm(o);
-
-        tab('create');
-
-        setTimeout(
-          savePdf,
-          150
+      const totals =
+        calculateTotals(
+          invoice.items || [],
+          invoice.gstRate
         );
 
-      };
+      const card =
+        document.createElement(
+          'div'
+        );
 
-    bs[2].onclick =
-      () => {
+      card.className =
+        'history-item';
 
-        if(
-          bs[2].dataset.arm !== '1'
-        ){
+      card.innerHTML = `
 
-          bs[2].dataset.arm =
-            '1';
+        <div class="history-info">
 
-          bs[2].textContent =
-            'Tap again';
+          <strong></strong>
+
+          <span></span>
+
+        </div>
+
+        <div class="history-buttons">
+
+          <button class="btn secondary">
+            Open
+          </button>
+
+          <button class="btn secondary">
+            PDF
+          </button>
+
+          <button class="btn secondary danger">
+            Delete
+          </button>
+
+        </div>
+
+      `;
+
+      card.querySelector(
+        '.history-info strong'
+      ).textContent =
+        invoice.invoiceNo +
+        ' · ' +
+        invoice.clientName;
+
+      card.querySelector(
+        '.history-info span'
+      ).textContent =
+        formatDate(
+          invoice.invoiceDate
+        ) +
+        ' · ' +
+        formatINR(
+          totals.total
+        );
+
+      const buttons =
+        card.querySelectorAll(
+          'button'
+        );
+
+      buttons[0].onclick =
+        ()=>{
+          fillInvoice(invoice);
+
+          switchTab('create');
+
+          window.scrollTo({
+            top:0,
+            behavior:'smooth'
+          });
+        };
+
+      buttons[1].onclick =
+        ()=>{
+          fillInvoice(invoice);
+
+          switchTab('create');
 
           setTimeout(
-            () => {
+            savePDF,
+            250
+          );
+        };
 
-              bs[2].dataset.arm =
-                '';
+      buttons[2].onclick =
+        ()=>{
 
-              bs[2].textContent =
-                'Delete';
+          if(
+            buttons[2].dataset.confirmed !== '1'
+          ){
 
-            },
-            3000
+            buttons[2].dataset.confirmed =
+              '1';
+
+            buttons[2].textContent =
+              'Tap again';
+
+            setTimeout(
+              ()=>{
+                buttons[2].dataset.confirmed =
+                  '';
+
+                buttons[2].textContent =
+                  'Delete';
+              },
+              3000
+            );
+
+            return;
+
+          }
+
+          database.invoices =
+            database.invoices.filter(
+              item =>
+                item.id !==
+                invoice.id
+            );
+
+          saveDatabase();
+
+          renderHistory();
+
+          showToast(
+            'Invoice deleted'
           );
 
-          return;
+        };
 
-        }
+      container.appendChild(
+        card
+      );
 
-        db.invoices =
-          db.invoices.filter(
-            x => x.id !== o.id
-          );
-
-        persist();
-
-        renderHist();
-
-        toast(
-          'Invoice deleted'
-        );
-
-      };
-
-    h.appendChild(d);
-
-  });
+    }
+  );
 
 }
 
-function tab(n){
 
-  $('create').style.display =
-    n === 'create'
-      ? 'block'
-      : 'none';
+/* =========================
+   TABS
+========================= */
 
-  $('hist').style.display =
-    n === 'hist'
-      ? 'block'
-      : 'none';
+function switchTab(tab){
 
-  $('tCreate').className =
-    n === 'create'
-      ? ''
-      : 'ghost';
+  const create =
+    $('createView');
 
-  $('tHist').className =
-    n === 'hist'
-      ? ''
-      : 'ghost';
+  const history =
+    $('historyView');
 
-  if(
-    n === 'hist'
-  ){
+  if(tab === 'create'){
 
-    renderHist();
+    create.style.display =
+      'block';
+
+    history.style.display =
+      'none';
+
+    $('tabCreate')
+      .classList.add('active');
+
+    $('tabHistory')
+      .classList.remove('active');
+
+  }else{
+
+    create.style.display =
+      'none';
+
+    history.style.display =
+      'block';
+
+    $('tabCreate')
+      .classList.remove('active');
+
+    $('tabHistory')
+      .classList.add('active');
+
+    renderHistory();
 
   }
 
@@ -1854,23 +2892,27 @@ function tab(n){
 
 
 /* =========================
-   UPI QR
+   UPI
 ========================= */
 
-function upiLink(amount){
+function buildUPILink(amount){
 
-  const u =
-    $('upi').value.trim();
+  const upi =
+    normalizeOptional(
+      $('upi').value
+    );
 
-  if(!u){
-
+  if(!upi)
     return '';
 
-  }
+  const invoiceNo =
+    $('invoiceNo')
+      .value
+      .trim();
 
   return (
     'upi://pay?pa=' +
-    encodeURIComponent(u) +
+    encodeURIComponent(upi) +
     '&pn=' +
     encodeURIComponent(
       'ShortBamboo'
@@ -1881,38 +2923,47 @@ function upiLink(amount){
           amount.toFixed(2)
         : ''
     ) +
-    '&cu=INR&tn=' +
+    '&cu=INR' +
+    '&tn=' +
     encodeURIComponent(
       'Invoice ' +
-      $('no').value.trim()
+      invoiceNo
     )
   );
 
 }
 
-function drawQr(amount){
+
+/* =========================
+   QR
+========================= */
+
+function generateQRCode(amount){
 
   const box =
     $('qr');
 
-  const cap =
+  const caption =
     $('qrcap');
 
   box.innerHTML =
     '';
 
-  cap.textContent =
+  caption.textContent =
     '';
 
-  lastQr =
+  lastQRCode =
     null;
 
   const link =
-    upiLink(amount);
+    buildUPILink(
+      amount
+    );
 
   if(
     !link ||
-    typeof QRCode === 'undefined'
+    typeof QRCode ===
+    'undefined'
   ){
 
     return;
@@ -1921,7 +2972,7 @@ function drawQr(amount){
 
   try{
 
-    lastQr =
+    lastQRCode =
       new QRCode(
         box,
         {
@@ -1933,100 +2984,121 @@ function drawQr(amount){
         }
       );
 
-    cap.textContent =
+    caption.textContent =
       amount > 0
         ? 'Scan to pay ' +
-          inr(amount)
+          formatINR(amount)
         : 'Scan to pay';
 
-  }catch(e){}
+  }catch(error){
+
+    console.error(
+      'QR error:',
+      error
+    );
+
+  }
 
 }
 
 
 /* =========================
-   QR PDF DOM
+   QR PDF
 ========================= */
 
-function qrDom(){
+function buildQRForPDF(){
 
   if(
-    !lastQr ||
-    !lastQr._oQRCode
+    !lastQRCode ||
+    !lastQRCode._oQRCode
   ){
 
     return null;
 
   }
 
-  const m =
-    lastQr._oQRCode;
+  const matrix =
+    lastQRCode._oQRCode;
 
-  const n =
-    m.getModuleCount();
+  const size =
+    matrix.getModuleCount();
 
-  const px =
+  const pixel =
     Math.max(
       3,
-      Math.floor(150 / n)
+      Math.floor(
+        150 / size
+      )
     );
 
-  const w =
+  const wrapper =
     document.createElement(
       'div'
     );
 
-  w.style.cssText =
-    `position:relative;
-     width:${n*px}px;
-     height:${n*px}px;
-     background:#fff`;
+  wrapper.style.cssText =
+    `
+      position:relative;
+      width:${size * pixel}px;
+      height:${size * pixel}px;
+      background:#fff;
+    `;
 
   for(
-    let r=0;
-    r<n;
-    r++
+    let row=0;
+    row<size;
+    row++
   ){
 
-    let c=0;
+    let col=0;
 
-    while(c<n){
+    while(col<size){
 
       if(
-        m.isDark(r,c)
+        matrix.isDark(
+          row,
+          col
+        )
       ){
 
-        let e=c;
+        let end=col;
 
         while(
-          e<n &&
-          m.isDark(r,e)
+          end<size &&
+          matrix.isDark(
+            row,
+            end
+          )
         ){
 
-          e++;
+          end++;
 
         }
 
-        const b =
+        const block =
           document.createElement(
             'div'
           );
 
-        b.style.cssText =
-          `position:absolute;
-           background:#000;
-           left:${c*px}px;
-           top:${r*px}px;
-           width:${(e-c)*px}px;
-           height:${px}px`;
+        block.style.cssText =
+          `
+            position:absolute;
+            background:#000;
+            left:${col * pixel}px;
+            top:${row * pixel}px;
+            width:${(end-col) * pixel}px;
+            height:${pixel}px;
+          `;
 
-        w.appendChild(b);
+        wrapper.appendChild(
+          block
+        );
 
-        c=e;
+        col=end;
 
       }else{
 
-        c++;
+        col++;
 
       }
 
@@ -2034,193 +3106,336 @@ function qrDom(){
 
   }
 
-  return w;
+  return wrapper;
 
 }
 
 
-/* =========================
-   PDF CLONE
-========================= */
+/* =========================================================
+   PDF
+   SAME DESIGN / SAME DOM STRUCTURE
+========================================================= */
 
-function cloneForPdf(){
+function createPDFClone(){
 
-  const src =
+  const source =
     $('invoicePaper');
 
-  const c =
-    src.cloneNode(true);
-
-  const orig =
-    src.querySelectorAll(
-      'input,textarea,select'
+  const clone =
+    source.cloneNode(
+      true
     );
 
-  const copies =
-    c.querySelectorAll(
-      'input,textarea,select'
+  clone.classList.add(
+    'pdf-mode'
+  );
+
+
+  /*
+    INPUTS
+    --------
+    Instead of replacing the whole invoice
+    with a completely different design, we
+    convert only the editable values into
+    visual blocks using the SAME field styles.
+  */
+
+  const originalFields =
+    source.querySelectorAll(
+      'input, textarea, select'
     );
 
-  c.classList.add('pdf');
+  const clonedFields =
+    clone.querySelectorAll(
+      'input, textarea, select'
+    );
 
-  copies.forEach(
-    (el,i) => {
 
-      const o =
-        orig[i];
+  clonedFields.forEach(
+    (
+      field,
+      index
+    )=>{
 
-      if(!o) return;
+      const original =
+        originalFields[index];
 
-      let rawValue =
-        o.tagName === 'SELECT'
-          ? (
-              o.options[
-                o.selectedIndex
-              ]?.text || ''
-            )
-          : o.value || '';
+      if(!original)
+        return;
 
-      let v =
-        String(rawValue)
-          .trim();
 
-      /*
-        IMPORTANT:
-        Form fields remain blank.
-        Only the PDF version shows N/A.
-      */
+      let value='';
 
-      if(!v){
-
-        v = 'N/A';
-
-      }
 
       if(
-        o.type === 'date' &&
-        v !== 'N/A'
+        original.tagName ===
+        'SELECT'
       ){
 
-        v =
-          fmtDate(v);
+        const selected =
+          original.options[
+            original.selectedIndex
+          ];
+
+        value =
+          selected
+            ? selected.text
+            : '';
+
+      }else{
+
+        value =
+          original.value || '';
 
       }
 
-      const d =
+
+      value =
+        String(value)
+          .trim();
+
+
+      /*
+        PDF-only N/A.
+        The actual invoice form remains blank.
+      */
+
+      if(!value){
+
+        value='N/A';
+
+      }
+
+
+      if(
+        original.type ===
+        'date' &&
+        value !== 'N/A'
+      ){
+
+        value =
+          formatDate(
+            value
+          );
+
+      }
+
+
+      const replacement =
         document.createElement(
           'div'
         );
 
-      d.textContent =
-        v;
+
+      replacement.textContent =
+        value;
+
+
+      /*
+        META FIELDS
+      */
 
       if(
-        v === 'N/A'
+        original.closest(
+          '.meta-card'
+        )
       ){
 
-        d.className =
-          'pdf-na';
+        replacement.className =
+          'pdf-field meta-pdf-field';
 
       }
 
-      const multi =
-        o.tagName === 'TEXTAREA';
+      /*
+        ITEM FIELDS
+      */
 
-      d.style.cssText =
-        `border:1px solid #dde2cf;
-         border-radius:6px;
-         padding:7px 9px;
-         background:#f6f8ef;
-         color:#1a1d18;
-         font:inherit;
-         width:${o.tagName === 'SELECT'
-           ? '85px'
-           : '100%'};
-         min-height:${multi
-           ? 56
-           : 34}px;
-         white-space:pre-wrap;
-         overflow-wrap:anywhere;
-         display:flex;
-         align-items:${multi
-           ? 'flex-start'
-           : 'center'}`;
+      else if(
+        original.closest(
+          '.items-wrap'
+        )
+      ){
 
-      el.replaceWith(d);
+        replacement.className =
+          'pdf-field item-pdf-field';
+
+      }
+
+      /*
+        PAYMENT FIELD
+      */
+
+      else if(
+        original.closest(
+          '.payment-box'
+        )
+      ){
+
+        replacement.className =
+          'pdf-field payment-pdf-field';
+
+      }
+
+      /*
+        NOTES FIELD
+      */
+
+      else if(
+        original.closest(
+          '.notes-box'
+        )
+      ){
+
+        replacement.className =
+          'pdf-field notes-pdf-field';
+
+      }
+
+      /*
+        NORMAL PARTY FIELDS
+      */
+
+      else{
+
+        replacement.className =
+          'pdf-field';
+
+      }
+
+
+      if(
+        original.tagName ===
+        'TEXTAREA'
+      ){
+
+        replacement.classList.add(
+          'textarea-pdf-field'
+        );
+
+      }
+
+
+      if(
+        value === 'N/A'
+      ){
+
+        replacement.classList.add(
+          'pdf-na'
+        );
+
+      }
+
+
+      /*
+        Preserve uppercase appearance
+        for PAN/GSTIN fields.
+      */
+
+      if(
+        original.style.textTransform ===
+        'uppercase'
+      ){
+
+        replacement.style.textTransform =
+          'uppercase';
+
+      }
+
+
+      field.replaceWith(
+        replacement
+      );
 
     }
   );
 
-  /*
-    Remove delete buttons and
-    other non-PDF elements.
-  */
-
-  c.querySelectorAll(
-    '.x,.nopdf'
-  ).forEach(
-    x => x.remove()
-  );
-
 
   /*
-    Preserve QR inside PDF.
+    Remove only editing controls.
+    The invoice layout itself remains.
   */
 
-  const q =
-    c.querySelector('#qr');
+  clone
+    .querySelectorAll(
+      '.no-pdf'
+    )
+    .forEach(
+      element=>{
+        element.remove();
+      }
+    );
 
-  if(q){
 
-    q.innerHTML =
+  /*
+    Rebuild QR inside the same QR area.
+  */
+
+  const qr =
+    clone.querySelector(
+      '#qr'
+    );
+
+  if(qr){
+
+    qr.innerHTML =
       '';
 
-    const qv =
-      qrDom();
+    const qrDOM =
+      buildQRForPDF();
 
-    if(qv){
+    if(qrDOM){
 
-      q.appendChild(qv);
-
-      q.style.cssText =
-        'display:inline-block;' +
-        'background:#fff;' +
-        'padding:10px;' +
-        'border:1px solid #dde2cf;' +
-        'border-radius:8px;' +
-        'margin-top:10px';
+      qr.appendChild(
+        qrDOM
+      );
 
     }
 
   }
 
 
-  c.querySelectorAll(
-    '[id]'
-  ).forEach(
-    x =>
-      x.removeAttribute('id')
-  );
+  /*
+    IDs are no longer needed
+    in the cloned PDF document.
+  */
 
-  c.style.borderRadius =
+  clone
+    .querySelectorAll(
+      '[id]'
+    )
+    .forEach(
+      element=>{
+        element.removeAttribute(
+          'id'
+        );
+      }
+    );
+
+
+  /*
+    IMPORTANT:
+    Do not shrink the invoice padding.
+    The screen uses 34px and PDF uses
+    the same 34px.
+  */
+
+  clone.style.borderRadius =
     '0';
 
-  c.style.boxShadow =
+  clone.style.boxShadow =
     'none';
 
-  c.style.borderTop =
-    '8px solid #b6e36b';
 
-  return c;
+  return clone;
 
 }
 
 
-/* =========================
-   MAKE PDF
-========================= */
+/* =========================================================
+   GENERATE PDF BLOB
+========================================================= */
 
-async function makePdf(){
+async function generatePDFBlob(){
 
   if(
     typeof html2pdf ===
@@ -2228,38 +3443,53 @@ async function makePdf(){
   ){
 
     throw new Error(
-      'PDF library unavailable'
+      'html2pdf library not loaded'
     );
 
   }
 
-  const src =
+
+  const source =
     $('invoicePaper');
 
-  const width =
-    src.offsetWidth;
+  const clone =
+    createPDFClone();
 
-  const c =
-    cloneForPdf();
+
+  /*
+    Exact same width as the visible invoice.
+  */
+
+  const width =
+    source.getBoundingClientRect()
+      .width;
+
 
   const host =
     document.createElement(
       'div'
     );
 
-  host.style.cssText =
-    `position:fixed;
-     left:-100000px;
-     top:0;
-     width:${width}px;
-     background:#fff;
-     z-index:-1`;
 
-  host.appendChild(c);
+  host.style.cssText =
+    `
+      position:fixed;
+      left:-100000px;
+      top:0;
+      width:${width}px;
+      background:#fff;
+      z-index:-1000;
+    `;
+
+
+  host.appendChild(
+    clone
+  );
 
   document.body.appendChild(
     host
   );
+
 
   try{
 
@@ -2274,31 +3504,47 @@ async function makePdf(){
         },
 
         html2canvas:{
+
           scale:2,
+
           useCORS:true,
+
           allowTaint:false,
+
           backgroundColor:'#fff',
-          logging:false
+
+          logging:false,
+
+          scrollX:0,
+
+          scrollY:0
+
         },
 
         jsPDF:{
+
           unit:'mm',
+
           format:'a4',
+
           orientation:'portrait',
+
           compress:true
+
         },
 
         pagebreak:{
           mode:[
-            'avoid-all',
             'css',
             'legacy'
           ]
         }
 
       })
-      .from(c)
-      .outputPdf('blob');
+      .from(clone)
+      .outputPdf(
+        'blob'
+      );
 
   }finally{
 
@@ -2309,463 +3555,11 @@ async function makePdf(){
 }
 
 
-/* =========================
-   FOLDER ACCESS
-========================= */
-
-function supportsFolderAccess(){
-
-  return (
-    typeof window.showDirectoryPicker ===
-    'function'
-  );
-
-}
-
-async function openFolderDB(){
-
-  return new Promise(
-    (resolve,reject) => {
-
-      const r =
-        indexedDB.open(
-          FOLDER_DB,
-          1
-        );
-
-      r.onupgradeneeded =
-        () => {
-
-          r.result
-            .createObjectStore(
-              'handles'
-            );
-
-        };
-
-      r.onsuccess =
-        () =>
-          resolve(
-            r.result
-          );
-
-      r.onerror =
-        () =>
-          reject(
-            r.error
-          );
-
-    }
-  );
-
-}
-
-async function storeFolderHandle(
-  handle
-){
-
-  try{
-
-    const d =
-      await openFolderDB();
-
-    return new Promise(
-      (resolve,reject) => {
-
-        const tx =
-          d.transaction(
-            'handles',
-            'readwrite'
-          );
-
-        tx.objectStore(
-          'handles'
-        ).put(
-          handle,
-          'invoiceFolder'
-        );
-
-        tx.oncomplete =
-          resolve;
-
-        tx.onerror =
-          () =>
-            reject(
-              tx.error
-            );
-
-      }
-    );
-
-  }catch(e){}
-
-}
-
-async function getStoredFolderHandle(){
-
-  try{
-
-    const d =
-      await openFolderDB();
-
-    return new Promise(
-      (resolve,reject) => {
-
-        const tx =
-          d.transaction(
-            'handles',
-            'readonly'
-          );
-
-        const r =
-          tx.objectStore(
-            'handles'
-          ).get(
-            'invoiceFolder'
-          );
-
-        r.onsuccess =
-          () =>
-            resolve(
-              r.result || null
-            );
-
-        r.onerror =
-          () =>
-            reject(
-              r.error
-            );
-
-      }
-    );
-
-  }catch(e){
-
-    return null;
-
-  }
-
-}
-
-async function clearFolderHandle(){
-
-  try{
-
-    const d =
-      await openFolderDB();
-
-    return new Promise(
-      (resolve,reject) => {
-
-        const tx =
-          d.transaction(
-            'handles',
-            'readwrite'
-          );
-
-        tx.objectStore(
-          'handles'
-        ).delete(
-          'invoiceFolder'
-        );
-
-        tx.oncomplete =
-          resolve;
-
-        tx.onerror =
-          () =>
-            reject(
-              tx.error
-            );
-
-      }
-    );
-
-  }catch(e){}
-
-}
-
-async function checkFolderPermission(
-  handle,
-  request=false
-){
-
-  try{
-
-    const opts = {
-      mode:'readwrite'
-    };
-
-    let p =
-      await handle.queryPermission(
-        opts
-      );
-
-    if(
-      p === 'granted'
-    ){
-
-      return true;
-
-    }
-
-    if(request){
-
-      p =
-        await handle.requestPermission(
-          opts
-        );
-
-      return p === 'granted';
-
-    }
-
-    return false;
-
-  }catch(e){
-
-    return false;
-
-  }
-
-}
-
-function showFolder(name){
-
-  const status =
-    $('folderStatus');
-
-  if(!status) return;
-
-  status.textContent =
-    '✓ Connected: ' +
-    name;
-
-  status.classList.add(
-    'ok'
-  );
-
-  if($('forgetFolder')){
-
-    $('forgetFolder').style.display =
-      'inline-block';
-
-  }
-
-  if($('folderBtn')){
-
-    $('folderBtn').textContent =
-      '📁 Change Folder';
-
-  }
-
-}
-
-async function chooseFolder(){
-
-  if(
-    !supportsFolderAccess()
-  ){
-
-    toast(
-      'This browser does not support direct folder saving. Use Chrome over HTTPS or normal download.'
-    );
-
-    return;
-
-  }
-
-  try{
-
-    const h =
-      await window.showDirectoryPicker({
-        mode:'readwrite'
-      });
-
-    if(
-      !(await checkFolderPermission(
-        h,
-        true
-      ))
-    ){
-
-      toast(
-        'Folder permission denied'
-      );
-
-      return;
-
-    }
-
-    folderHandle =
-      h;
-
-    await storeFolderHandle(
-      h
-    );
-
-    showFolder(
-      h.name
-    );
-
-    toast(
-      'Invoice folder connected'
-    );
-
-  }catch(e){
-
-    if(
-      e.name !== 'AbortError'
-    ){
-
-      toast(
-        'Folder select nahi ho paya'
-      );
-
-    }
-
-  }
-
-}
-
-async function loadFolder(){
-
-  if(
-    !supportsFolderAccess()
-  ){
-
-    return;
-
-  }
-
-  const h =
-    await getStoredFolderHandle();
-
-  if(!h){
-
-    return;
-
-  }
-
-  if(
-    await checkFolderPermission(
-      h,
-      false
-    )
-  ){
-
-    folderHandle =
-      h;
-
-    showFolder(
-      h.name
-    );
-
-  }
-
-}
-
-async function forgetFolder(){
-
-  folderHandle =
-    null;
-
-  await clearFolderHandle();
-
-  if($('folderStatus')){
-
-    $('folderStatus').textContent =
-      'No folder connected. PDF will use normal download if no folder is selected.';
-
-    $('folderStatus')
-      .classList.remove(
-        'ok'
-      );
-
-  }
-
-  if($('forgetFolder')){
-
-    $('forgetFolder').style.display =
-      'none';
-
-  }
-
-  if($('folderBtn')){
-
-    $('folderBtn').textContent =
-      '📁 Select Invoice Folder';
-
-  }
-
-  toast(
-    'Folder disconnected'
-  );
-
-}
-
-async function saveBlobToFolder(
-  blob,
-  filename
-){
-
-  if(!folderHandle){
-
-    return false;
-
-  }
-
-  if(
-    !(await checkFolderPermission(
-      folderHandle,
-      true
-    ))
-  ){
-
-    return false;
-
-  }
-
-  try{
-
-    const fileHandle =
-      await folderHandle.getFileHandle(
-        filename,
-        {
-          create:true
-        }
-      );
-
-    const writable =
-      await fileHandle.createWritable();
-
-    await writable.write(
-      blob
-    );
-
-    await writable.close();
-
-    return true;
-
-  }catch(e){
-
-    console.warn(
-      'Folder save failed',
-      e
-    );
-
-    return false;
-
-  }
-
-}
-
-
-/* =========================
+/* =========================================================
    DOWNLOAD
-========================= */
+========================================================= */
 
-async function downloadBlob(
+function downloadBlob(
   blob,
   filename
 ){
@@ -2775,95 +3569,98 @@ async function downloadBlob(
       blob
     );
 
-  const a =
+  const link =
     document.createElement(
       'a'
     );
 
-  a.href =
+  link.href =
     url;
 
-  a.download =
+  link.download =
     filename;
 
-  a.style.display =
+  link.style.display =
     'none';
 
   document.body.appendChild(
-    a
+    link
   );
 
-  a.click();
+  link.click();
 
-  a.remove();
+  link.remove();
 
   setTimeout(
-    () =>
+    ()=>{
       URL.revokeObjectURL(
         url
-      ),
-    10000
+      );
+    },
+    15000
   );
 
 }
 
 
-/* =========================
+/* =========================================================
    SAVE PDF
-========================= */
+========================================================= */
 
-async function savePdf(){
+async function savePDF(){
 
   const invoice =
-    readForm();
+    readInvoice();
+
 
   if(
-    !valid(invoice)
+    !validateInvoice(
+      invoice
+    )
   ){
 
     return;
 
   }
 
+
+  /*
+    Save current invoice first.
+  */
+
   if(
-    !saveInvoice(true)
+    !saveInvoice()
   ){
 
     return;
 
   }
 
-  const btn =
-    $('pdfBtn');
 
-  const old =
-    btn.textContent;
+  const button =
+    $('pdfButton');
 
-  btn.disabled =
+  const originalText =
+    button.textContent;
+
+
+  button.disabled =
     true;
 
-  btn.textContent =
+  button.textContent =
     'Creating PDF...';
 
-  toast(
+
+  showToast(
     'PDF ban rahi hai...'
   );
 
+
   try{
 
-    if(
-      typeof html2pdf ===
-      'undefined'
-    ){
-
-      throw new Error(
-        'PDF library unavailable'
-      );
-
-    }
-
     const blob =
-      await makePdf();
+      await generatePDFBlob();
+
 
     if(
       !blob ||
@@ -2876,11 +3673,12 @@ async function savePdf(){
 
     }
 
-    const filename =
+
+    const safeName =
       (
-        invoice.no +
+        invoice.invoiceNo +
         '_' +
-        invoice.cname
+        invoice.clientName
       )
       .replace(
         /[^\w\-]+/g,
@@ -2889,93 +3687,87 @@ async function savePdf(){
       .replace(
         /^_+|_+$/g,
         ''
-      ) +
+      );
+
+
+    const filename =
+      safeName +
       '.pdf';
 
 
-    /*
-      If folder is connected,
-      save there.
-      Otherwise normal download.
-    */
-
-    let savedToFolder =
-      false;
-
-    if(folderHandle){
-
-      savedToFolder =
-        await saveBlobToFolder(
-          blob,
-          filename
-        );
-
-    }
-
-    if(!savedToFolder){
-
-      await downloadBlob(
-        blob,
-        filename
-      );
-
-    }
-
-    toast(
-      savedToFolder
-        ? 'PDF folder mein save ho gayi'
-        : 'PDF download ho gayi'
+    downloadBlob(
+      blob,
+      filename
     );
+
+
+    showToast(
+      'PDF download ho gayi'
+    );
+
 
   }catch(error){
 
     console.error(
-      'PDF generation failed:',
+      'PDF generation error:',
       error
     );
 
-    toast(
+
+    showToast(
       'PDF nahi bani — Print se Save as PDF khulega'
     );
 
+
     setTimeout(
-      () =>
-        window.print(),
-      700
+      ()=>{
+        window.print();
+      },
+      800
     );
 
   }finally{
 
-    btn.disabled =
+    button.disabled =
       false;
 
-    btn.textContent =
-      old;
+    button.textContent =
+      originalText;
 
   }
 
 }
 
 
-/* =========================
+/* =========================================================
    INITIALIZE
-========================= */
+========================================================= */
 
-async function init(){
+function initialize(){
 
-  renderClients();
+  renderClientList();
 
-  renderHist();
+  if(
+    !database.settings.notes
+  ){
+
+    database.settings.notes =
+      'Payment due by the due date. Thank you for working with ShortBamboo.';
+
+    saveDatabase();
+
+  }
 
   newInvoice();
 
-  tab('create');
-
-  await loadFolder();
+  switchTab(
+    'create'
+  );
 
 }
 
-init();
+
+initialize();
 
 </script>
 
