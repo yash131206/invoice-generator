@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="robots" content="noindex, nofollow">
+<meta name="robots" content="noindex,nofollow">
 <title>Invoice Maker — ShortBamboo</title>
 
 <style>
@@ -12,79 +12,85 @@
   --fg:#1a1d18;
   --card:#fff;
   --line:#d9dccf;
-  --acc:#3f5d1f;
-  --accfg:#fff;
-  --mut:#666;
-  box-sizing:border-box;
-  padding-top:env(safe-area-inset-top,0px);
-  padding-bottom:env(safe-area-inset-bottom,0px)
+  --acc:#526b36;
+  --lime:#d9f08c;
+  --mut:#687064;
+  --danger:#b42318;
 }
 
-@media(prefers-color-scheme:dark){
-  :root:not([data-theme="light"]){
-    --bg:#10120f;
-    --fg:#eceee6;
-    --card:#1a1d18;
-    --line:#2f342a;
-    --acc:#b6e36b;
-    --accfg:#10120f;
-    --mut:#9aa08f
-  }
-}
-
-:root[data-theme="dark"]{
-  --bg:#10120f;
-  --fg:#eceee6;
-  --card:#1a1d18;
-  --line:#2f342a;
-  --acc:#b6e36b;
-  --accfg:#10120f;
-  --mut:#9aa08f
-}
+*{box-sizing:border-box}
 
 html{
-  scroll-padding-top:env(safe-area-inset-top,0px)
-}
-
-*{
-  box-sizing:border-box
+  scroll-behavior:smooth;
 }
 
 body{
   margin:0;
   background:var(--bg);
   color:var(--fg);
-  font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
-  padding:14px
+  font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  padding:calc(12px + env(safe-area-inset-top)) 12px calc(16px + env(safe-area-inset-bottom));
 }
 
 .wrap{
-  max-width:820px;
-  margin:0 auto
+  max-width:920px;
+  margin:auto;
 }
 
+.tabs,
 .bar{
   display:flex;
   gap:8px;
   flex-wrap:wrap;
-  margin-bottom:12px
+}
+
+.tabs{
+  margin-bottom:12px;
+}
+
+.tabs button{
+  flex:1;
+}
+
+.bar{
+  margin-bottom:12px;
+}
+
+.bar input{
+  flex:1 1 170px;
+  min-width:150px;
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:8px;
+  padding:10px 12px;
+  color:var(--fg);
+  font:inherit;
 }
 
 button{
-  background:var(--acc);
-  color:var(--accfg);
   border:0;
   border-radius:8px;
   padding:10px 14px;
-  font:600 14px inherit;
-  font-family:inherit;
-  cursor:pointer
+  background:var(--acc);
+  color:#fff;
+  font:700 14px inherit;
+  cursor:pointer;
 }
 
 button.ghost{
   background:transparent;
   color:var(--fg);
-  border:1px solid var(--line)
+  border:1px solid var(--line);
+}
+
+button.danger{
+  color:var(--danger);
+  border-color:#e5bdb9;
+}
+
+button:disabled{
+  opacity:.55;
+  cursor:not-allowed;
 }
 
 button:focus-visible,
@@ -92,383 +98,430 @@ input:focus-visible,
 textarea:focus-visible,
 select:focus-visible{
   outline:2px solid var(--acc);
-  outline-offset:1px
-}
-
-button:disabled{
-  opacity:.55;
-  cursor:not-allowed
-}
-
-.tabs{
-  display:flex;
-  gap:6px;
-  margin-bottom:12px
-}
-
-.tabs button{
-  flex:1
-}
-
-.toast{
-  position:fixed;
-  left:50%;
-  transform:translateX(-50%);
-  bottom:calc(20px + env(safe-area-inset-bottom,0px));
-  background:var(--acc);
-  color:var(--accfg);
-  padding:10px 16px;
-  border-radius:8px;
-  font-weight:600;
-  display:none;
-  z-index:9999;
-  box-shadow:0 8px 25px rgba(0,0,0,.18)
+  outline-offset:2px;
 }
 
 .paper{
   background:#fff;
   color:#1a1d18;
-  border-radius:10px;
-  padding:28px
-}
-
-.paper input,
-.paper textarea,
-.paper select{
-  font:inherit;
-  color:#1a1d18;
-  border:1px solid #ddd;
-  border-radius:6px;
-  padding:6px 8px;
-  width:100%;
-  background:#fafaf7
-}
-
-.paper textarea{
-  resize:vertical;
-  min-height:34px
+  border-radius:12px;
+  padding:30px;
+  box-shadow:0 5px 24px #10120f0d;
 }
 
 .top{
   display:flex;
   justify-content:space-between;
-  gap:12px;
+  gap:18px;
   flex-wrap:wrap;
   border-bottom:3px solid #10120f;
-  padding-bottom:14px
+  padding-bottom:15px;
 }
 
 .brand{
-  font-size:24px;
-  font-weight:800
+  font-size:25px;
+  font-weight:850;
+  letter-spacing:-.4px;
 }
 
 .brand small{
   display:block;
+  color:#666;
   font-size:12px;
   font-weight:400;
-  color:#666
+  letter-spacing:0;
+  margin-top:3px;
 }
 
 .title{
-  font-size:28px;
-  font-weight:800
+  font-size:30px;
+  font-weight:850;
 }
 
 .grid{
   display:grid;
   grid-template-columns:1fr 1fr;
-  gap:18px;
-  margin:18px 0
+  gap:20px;
+  margin:20px 0;
 }
 
 label{
-  font-size:12px;
-  color:#777;
   display:block;
-  margin:8px 0 3px
+  color:#777;
+  font-size:12px;
+  font-weight:700;
+  margin:9px 0 4px;
+}
+
+.paper input,
+.paper textarea,
+.paper select{
+  width:100%;
+  padding:7px 9px;
+  border:1px solid #dcded6;
+  border-radius:6px;
+  background:#fafaf7;
+  color:#1a1d18;
+  font:inherit;
+}
+
+.paper textarea{
+  resize:vertical;
+  min-height:38px;
+}
+
+.mini{
+  display:flex;
+  gap:6px;
+  margin-top:6px;
+}
+
+.mini button{
+  background:#eef0e8;
+  color:#3f5d1f;
+  border:1px solid #d9dccf;
+  padding:6px 10px;
+  font-size:12px;
+}
+
+.table-wrap{
+  overflow-x:auto;
+  -webkit-overflow-scrolling:touch;
 }
 
 table{
   width:100%;
-  border-collapse:collapse
+  min-width:620px;
+  border-collapse:collapse;
 }
 
 th{
   background:#10120f;
   color:#fff;
-  font-size:12px;
   text-align:left;
-  padding:8px
+  font-size:12px;
+  padding:9px 8px;
 }
 
 td{
-  padding:6px 4px;
+  padding:7px 4px;
   border-bottom:1px solid #eee;
-  vertical-align:top
+  vertical-align:top;
 }
 
 .q{
-  width:64px
+  width:70px;
 }
 
 .r{
-  width:100px
+  width:110px;
 }
 
 .a{
-  width:104px;
+  width:115px;
   text-align:right;
-  padding-right:6px;
-  font-weight:600
+  font-weight:700;
+  white-space:nowrap;
 }
 
 .x{
-  width:40px
+  width:42px;
 }
 
 .x button{
   background:#eee;
   color:#333;
-  padding:6px 10px
+  padding:6px 10px;
 }
 
-.tot{
-  margin-left:auto;
-  width:300px;
-  margin-top:14px
+.sum{
+  display:grid;
+  grid-template-columns:minmax(180px,38%) 1fr;
+  gap:20px;
+  margin-top:18px;
+}
+
+.sum .bank textarea{
+  height:155px;
 }
 
 .tot div{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  padding:5px 0;
-  gap:8px
+  gap:10px;
+  padding:6px 0;
+}
+
+.tot .gstline{
+  display:grid;
+  grid-template-columns:1fr auto auto;
 }
 
 .tot select{
-  width:96px
+  width:90px;
 }
 
-.tot .g{
+.tot .grand{
   font-size:20px;
-  font-weight:800;
+  font-weight:850;
   border-top:2px solid #10120f;
-  margin-top:6px;
-  padding-top:10px
+  margin-top:7px;
+  padding-top:11px;
+}
+
+.nrow{
+  display:flex;
+  gap:20px;
+  align-items:flex-end;
+  margin-top:8px;
+}
+
+.nt{
+  flex:1;
+}
+
+.nt textarea{
+  min-height:75px;
+}
+
+.qrbox{
+  width:160px;
+  flex:none;
+  text-align:center;
+}
+
+#qr{
+  display:flex;
+  justify-content:center;
+}
+
+#qrcap{
+  font-size:11px;
+  color:#666;
+  margin-top:5px;
 }
 
 .foot{
-  margin-top:16px;
-  font-size:12px;
-  color:#777;
-  text-align:center;
+  margin-top:18px;
+  padding-top:10px;
   border-top:1px solid #eee;
-  padding-top:10px
+  text-align:center;
+  color:#777;
+  font-size:11px;
 }
 
 .hint{
   font-size:12px;
   color:var(--mut);
-  margin:8px 2px
+  line-height:1.5;
+  margin:9px 2px;
+}
+
+.folderbar{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  flex-wrap:wrap;
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:10px;
+  padding:10px 12px;
+  margin-bottom:12px;
+}
+
+.folderstatus{
+  font-size:12px;
+  color:var(--mut);
+  flex:1;
+  min-width:180px;
+}
+
+.folderstatus.ok{
+  color:#3f5d1f;
+  font-weight:700;
 }
 
 #hist{
-  display:none
+  display:none;
 }
 
 .item{
   background:var(--card);
   border:1px solid var(--line);
   border-radius:10px;
-  padding:12px;
+  padding:13px;
   margin-bottom:8px;
   display:flex;
-  gap:10px;
+  gap:12px;
   align-items:center;
   justify-content:space-between;
-  flex-wrap:wrap
+  flex-wrap:wrap;
 }
 
 .item b{
-  display:block
+  display:block;
+  margin-bottom:3px;
 }
 
 .item span{
   font-size:13px;
-  color:var(--mut)
+  color:var(--mut);
 }
 
-.item .btns{
+.btns{
   display:flex;
-  gap:6px
+  gap:6px;
 }
 
 .empty{
-  padding:24px;
+  padding:35px 20px;
   text-align:center;
-  color:var(--mut)
+  color:var(--mut);
+  background:#fff;
+  border:1px dashed var(--line);
+  border-radius:10px;
 }
 
-.sum{
-  display:grid;
-  grid-template-columns:minmax(120px,38%) 1fr;
-  gap:12px;
-  align-items:stretch;
-  margin-top:14px
-}
-
-.sum .bank{
-  min-width:0
-}
-
-.sum .tot{
-  margin:0;
-  width:auto;
-  min-width:0
-}
-
-.bar input{
-  flex:1 1 150px;
-  min-width:0;
-  background:var(--card);
-  color:var(--fg);
-  border:1px solid var(--line);
-  border-radius:8px;
-  padding:10px 12px;
-  font:inherit
-}
-
-.sum .bank{
-  display:flex;
-  flex-direction:column
-}
-
-.sum .bank textarea{
-  flex:none;
-  height:190px;
-  min-height:34px
-}
-
-.qrbox{
-  margin-top:10px
-}
-
-.mini{
-  display:flex;
-  gap:6px;
-  margin-top:6px
-}
-
-.paper .mini button{
-  background:#eef0e8;
-  color:#3f5d1f;
-  border:1px solid #d9dccf;
-  padding:6px 10px;
-  font-size:12px
+.toast{
+  position:fixed;
+  left:50%;
+  bottom:calc(20px + env(safe-area-inset-bottom));
+  transform:translateX(-50%);
+  z-index:9999;
+  display:none;
+  background:#10120f;
+  color:#fff;
+  padding:11px 17px;
+  border-radius:9px;
+  font-size:13px;
+  font-weight:700;
+  max-width:calc(100vw - 30px);
+  text-align:center;
+  box-shadow:0 8px 30px #0003;
 }
 
 .paper.pdf{
-  background:#fff;
-  color:#1a1d18
+  box-shadow:none;
+  border-radius:0;
 }
 
 .paper.pdf .top{
-  border-bottom-color:#3f5d1f
+  border-color:#3f5d1f;
 }
 
 .paper.pdf .title{
-  color:#3f5d1f
-}
-
-.paper.pdf .brand small,
-.paper.pdf label,
-.paper.pdf .foot{
-  color:#6b7160
+  color:#3f5d1f;
 }
 
 .paper.pdf th{
   background:#b6e36b;
-  color:#10120f
+  color:#10120f;
 }
 
 .paper.pdf td{
-  border-bottom-color:#e4e7da
+  border-color:#e4e7da;
 }
 
-.paper.pdf .tot .g{
-  border-top-color:#3f5d1f;
-  color:#3f5d1f
+.paper.pdf .grand{
+  border-color:#3f5d1f;
+  color:#3f5d1f;
 }
 
+.paper.pdf label,
+.paper.pdf .brand small,
 .paper.pdf .foot{
-  border-top-color:#e4e7da
+  color:#6b7160;
 }
 
-#qr{
-  margin-top:10px
+.pdf-na{
+  color:#777;
+  font-style:italic;
 }
 
-#qrcap{
-  font-size:12px;
-  color:#666;
-  margin-top:4px
-}
+@media(max-width:700px){
+  .grid,
+  .sum{
+    grid-template-columns:1fr;
+  }
 
-@media(max-width:600px){
-  .grid{
-    grid-template-columns:1fr
+  .nrow{
+    flex-direction:column;
+    align-items:stretch;
+  }
+
+  .qrbox{
+    width:100%;
   }
 
   .paper{
-    padding:14px
+    padding:17px;
   }
 
-  .tot{
-    font-size:14px
+  .title{
+    font-size:26px;
   }
 
-  .tot select{
-    width:78px;
-    padding:4px
+  .brand{
+    font-size:22px;
+  }
+}
+
+@media(max-width:480px){
+  body{
+    padding-left:8px;
+    padding-right:8px;
   }
 
-  .tot .g{
-    font-size:17px
+  .bar button{
+    flex:1 1 calc(50% - 8px);
   }
 
-  .sum{
-    grid-template-columns:1fr
+  .bar input{
+    flex:1 1 100%;
   }
 
-  .sum .bank textarea{
-    height:130px
+  .paper{
+    padding:13px;
+  }
+
+  .btns{
+    width:100%;
+  }
+
+  .btns button{
+    flex:1;
   }
 }
 
 @media print{
-  :root{
-    padding:0
+  @page{
+    size:A4;
+    margin:0;
   }
 
+  html,
   body{
-    background:#fff;
-    padding:0
+    background:#fff!important;
+    padding:0!important;
   }
 
   .bar,
   .tabs,
+  .folderbar,
   #hist,
   .toast,
+  .hint,
   .x,
-  .hint{
-    display:none!important
+  .nopdf{
+    display:none!important;
   }
 
   .paper{
+    width:100%;
+    padding:15mm;
     border-radius:0;
-    padding:0
+    box-shadow:none;
   }
 
   .paper input,
@@ -478,7 +531,14 @@ td{
     background:transparent;
     padding:2px 0;
     appearance:none;
-    resize:none
+  }
+
+  .table-wrap{
+    overflow:visible;
+  }
+
+  table{
+    min-width:0;
   }
 }
 </style>
@@ -488,255 +548,327 @@ td{
 
 <div class="wrap">
 
-  <div class="tabs">
-    <button id="tCreate" onclick="tab('create')">Create</button>
-    <button id="tHist" class="ghost" onclick="tab('hist')">Saved invoices</button>
+<div class="tabs">
+  <button id="tCreate" onclick="tab('create')">Create</button>
+  <button id="tHist" class="ghost" onclick="tab('hist')">Saved invoices</button>
+</div>
+
+<div id="create">
+
+<div class="bar">
+  <button onclick="addRow()">+ Add item</button>
+  <button id="saveBtn" onclick="saveInvoice()">Save invoice</button>
+  <button id="pdfBtn" onclick="savePdf()">Save PDF</button>
+  <button class="ghost" onclick="newInvoice()">New invoice</button>
+  <input
+    id="upi"
+    data-remember
+    placeholder="Your UPI ID"
+    aria-label="Your UPI ID"
+    oninput="calc()"
+  >
+</div>
+
+<div class="paper" id="invoicePaper">
+
+<div class="top">
+  <div class="brand">
+    ShortBamboo
+    <small>Creator Marketing Agency · hello@shortbamboo.com</small>
   </div>
 
-  <div id="create">
+  <div class="title">INVOICE</div>
+</div>
 
-    <div class="bar">
-      <button onclick="addRow()">Add item</button>
-      <button onclick="saveInvoice()">Save invoice</button>
-      <button onclick="savePdf()">Save PDF</button>
-      <button class="ghost" onclick="newInvoice()">New invoice</button>
+<div class="grid">
 
-      <input
-        id="upi"
-        data-remember
-        placeholder="Your UPI ID"
-        aria-label="Your UPI ID"
-        oninput="calc()"
-      >
-    </div>
+<!-- BILL TO -->
+<div>
 
-    <div class="paper">
+  <label for="cname">Bill to</label>
 
-      <div class="top">
-        <div class="brand">
-          ShortBamboo
-          <small>Creator Marketing Agency · hello@shortbamboo.com</small>
-        </div>
+  <input
+    id="cname"
+    list="clients"
+    placeholder="Client or brand name"
+    autocomplete="off"
+    onchange="pickClient()"
+  >
 
-        <div class="title">INVOICE</div>
-      </div>
+  <datalist id="clients"></datalist>
 
-      <div class="grid">
-
-        <div>
-
-          <label for="cname">Bill to</label>
-
-          <input
-            id="cname"
-            list="clients"
-            placeholder="Client or brand name"
-            autocomplete="off"
-            onchange="pickClient()"
-          >
-
-          <datalist id="clients"></datalist>
-
-          <div class="mini nopdf">
-            <button onclick="saveClient()">Save client</button>
-            <button onclick="delClient(this)">Delete client</button>
-          </div>
-
-          <label for="caddr">Client address</label>
-          <textarea id="caddr"></textarea>
-
-          <label for="cgst">Client GSTIN</label>
-          <input id="cgst">
-
-          <label for="pan">Your PAN number</label>
-          <input
-            id="pan"
-            data-remember
-            maxlength="10"
-            placeholder="ABCDE1234F"
-            style="text-transform:uppercase"
-          >
-
-        </div>
-
-        <div>
-
-          <label for="no">Invoice no.</label>
-          <input id="no" oninput="calc()">
-
-          <label for="date">Invoice date</label>
-          <input id="date" type="date">
-
-          <label for="due">Due date</label>
-          <input id="due" type="date">
-
-          <label for="mgst">Your GSTIN</label>
-          <input id="mgst" data-remember>
-
-        </div>
-
-      </div>
-
-      <table>
-
-        <thead>
-          <tr>
-            <th>Description</th>
-            <th class="q">Qty</th>
-            <th class="r">Rate (₹)</th>
-            <th class="a">Amount</th>
-            <th class="x"></th>
-          </tr>
-        </thead>
-
-        <tbody id="rows"></tbody>
-
-      </table>
-
-      <div class="sum">
-
-        <div class="bank">
-
-          <label for="pay">Payment details</label>
-
-          <textarea
-            id="pay"
-            data-remember
-            placeholder="Bank name, A/C no., IFSC"
-          ></textarea>
-
-        </div>
-
-        <div class="tot">
-
-          <div>
-            <span>Subtotal</span>
-            <span id="sub">₹0.00</span>
-          </div>
-
-          <div>
-            <span>GST</span>
-
-            <select id="gst" onchange="calc()">
-              <option value="0">None</option>
-              <option value="5">5%</option>
-              <option value="12">12%</option>
-              <option value="18">18%</option>
-            </select>
-
-            <span id="gstamt">₹0.00</span>
-          </div>
-
-          <div class="g">
-            <span>Total</span>
-            <span id="total">₹0.00</span>
-          </div>
-
-        </div>
-
-      </div>
-
-      <div class="nrow">
-
-        <div class="nt">
-
-          <label for="notes" style="margin-top:16px">
-            Notes
-          </label>
-
-          <textarea id="notes" data-remember></textarea>
-
-        </div>
-
-        <div class="qrbox">
-
-          <div id="qr"></div>
-          <div id="qrcap"></div>
-
-        </div>
-
-      </div>
-
-      <div class="foot">
-        This is a computer-generated invoice.
-      </div>
-
-    </div>
-
-    <p class="hint">
-      GSTIN, payment details and notes are remembered on this device.
-      Everything is stored in this browser only.
-    </p>
-
+  <div class="mini nopdf">
+    <button onclick="saveClient()">Save client</button>
+    <button onclick="delClient(this)">Delete client</button>
   </div>
 
-  <div id="hist"></div>
+  <label for="caddr">Client address</label>
+  <textarea
+    id="caddr"
+    placeholder="Client billing address"
+  ></textarea>
+
+  <label for="cpan">Client PAN</label>
+  <input
+    id="cpan"
+    maxlength="10"
+    placeholder="ABCDE1234F"
+    style="text-transform:uppercase"
+  >
+
+  <label for="cgst">Client GSTIN</label>
+  <input
+    id="cgst"
+    maxlength="15"
+    placeholder="Optional"
+    style="text-transform:uppercase"
+  >
+
+</div>
+
+<!-- OUR DETAILS + INVOICE DETAILS -->
+<div>
+
+  <label for="no">Invoice no.</label>
+  <input
+    id="no"
+    oninput="calc()"
+    placeholder="SB-2026-001"
+  >
+
+  <label for="date">Invoice date</label>
+  <input
+    id="date"
+    type="date"
+  >
+
+  <label for="due">Due date</label>
+  <input
+    id="due"
+    type="date"
+  >
+
+  <label for="pan">Our PAN</label>
+  <input
+    id="pan"
+    data-remember
+    maxlength="10"
+    placeholder="ABCDE1234F"
+    style="text-transform:uppercase"
+  >
+
+  <label for="mgst">Our GSTIN</label>
+  <input
+    id="mgst"
+    data-remember
+    maxlength="15"
+    placeholder="Optional"
+    style="text-transform:uppercase"
+  >
+
+</div>
+
+</div>
+
+<div class="table-wrap">
+
+<table>
+
+<thead>
+<tr>
+  <th>Description</th>
+  <th class="q">Qty</th>
+  <th class="r">Rate (₹)</th>
+  <th class="a">Amount</th>
+  <th class="x"></th>
+</tr>
+</thead>
+
+<tbody id="rows"></tbody>
+
+</table>
+
+</div>
+
+<div class="sum">
+
+<div class="bank">
+
+  <label for="pay">Payment details</label>
+
+  <textarea
+    id="pay"
+    data-remember
+    placeholder="Bank name&#10;Account holder&#10;Account number&#10;IFSC"
+  ></textarea>
+
+</div>
+
+<div class="tot">
+
+  <div>
+    <span>Subtotal</span>
+    <span id="sub">₹0.00</span>
+  </div>
+
+  <div class="gstline">
+    <span>GST</span>
+
+    <select id="gst" onchange="calc()">
+      <option value="0">None</option>
+      <option value="5">5%</option>
+      <option value="12">12%</option>
+      <option value="18">18%</option>
+    </select>
+
+    <span id="gstamt">₹0.00</span>
+  </div>
+
+  <div class="grand">
+    <span>Total</span>
+    <span id="total">₹0.00</span>
+  </div>
+
+</div>
+
+</div>
+
+<div class="nrow">
+
+<div class="nt">
+
+  <label for="notes">Notes</label>
+
+  <textarea
+    id="notes"
+    data-remember
+    placeholder="Payment terms, campaign notes, etc."
+  ></textarea>
+
+</div>
+
+<div class="qrbox">
+  <div id="qr"></div>
+  <div id="qrcap"></div>
+</div>
+
+</div>
+
+<div class="foot">
+  This is a computer-generated invoice.
+</div>
+
+</div>
+
+<p class="hint">
+  Invoice data is stored locally in this browser.
+  Your selected PDF folder is used only when the browser supports folder access.
+  No backend is required.
+</p>
+
+</div>
+
+<div id="hist"></div>
 
 </div>
 
 <div class="toast" id="toast"></div>
 
-<!--
-  Local libraries only.
-  No external CDN requests are required for
-  PDF generation or UPI QR generation.
--->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<!-- PDF + QR LIBRARIES -->
+<script
+  src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"
+  crossorigin="anonymous"
+  referrerpolicy="no-referrer">
+</script>
+
+<script
+  src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"
+  crossorigin="anonymous"
+  referrerpolicy="no-referrer">
+</script>
 
 <script>
+
 const $ = id => document.getElementById(id);
 
-const KEY = 'sb_invoice_v1';
+const KEY = 'sb_invoice_v3';
+const FOLDER_DB = 'sb_invoice_folder_v1';
 
-let mem = null;
+let db = readDB();
+let currentInvoiceId = null;
+let lastQr = null;
+let folderHandle = null;
 
-function read(){
-  try{
-    const s = localStorage.getItem(KEY);
-    return s ? JSON.parse(s) : {};
-  }catch(e){
-    return mem || {};
-  }
-}
 
-const db = Object.assign(
-  {
+/* =========================
+   DATABASE
+========================= */
+
+function baseDB(){
+  return {
+    version:3,
     settings:{},
     counter:1,
     clients:{},
     invoices:[]
-  },
-  read()
-);
-
-function persist(){
-  try{
-    localStorage.setItem(KEY,JSON.stringify(db));
-  }catch(e){
-    mem = db;
-  }
+  };
 }
 
-const inr = n =>
-  '₹' + Number(n || 0).toLocaleString(
-    'en-IN',
-    {
-      minimumFractionDigits:2,
-      maximumFractionDigits:2
+function readDB(){
+
+  try{
+
+    const x = localStorage.getItem(KEY);
+
+    if(!x){
+      return baseDB();
     }
-  );
 
-const isoDay = d =>
-  new Date(
-    d - d.getTimezoneOffset() * 60000
-  ).toISOString().slice(0,10);
+    const p = JSON.parse(x);
 
-const autoNo = () =>
-  'SB-' +
-  new Date().getFullYear() +
-  '-' +
-  String(db.counter).padStart(3,'0');
+    return {
+      ...baseDB(),
+      ...p,
+      settings:p.settings || {},
+      clients:p.clients || {},
+      invoices:Array.isArray(p.invoices)
+        ? p.invoices
+        : []
+    };
+
+  }catch(e){
+
+    return baseDB();
+
+  }
+
+}
+
+function persist(){
+
+  try{
+
+    localStorage.setItem(
+      KEY,
+      JSON.stringify(db)
+    );
+
+    return true;
+
+  }catch(e){
+
+    toast('Browser storage unavailable');
+
+    return false;
+
+  }
+
+}
+
+
+/* =========================
+   UTILITIES
+========================= */
 
 function toast(m){
 
@@ -745,11 +877,68 @@ function toast(m){
   t.textContent = m;
   t.style.display = 'block';
 
-  clearTimeout(toast.h);
+  clearTimeout(toast.t);
 
-  toast.h = setTimeout(()=>{
-    t.style.display = 'none';
-  },1800);
+  toast.t = setTimeout(
+    () => t.style.display = 'none',
+    2300
+  );
+
+}
+
+function inr(n){
+
+  return '₹' + (Number(n)||0).toLocaleString(
+    'en-IN',
+    {
+      minimumFractionDigits:2,
+      maximumFractionDigits:2
+    }
+  );
+
+}
+
+function isoDay(d){
+
+  const x = new Date(d);
+
+  x.setMinutes(
+    x.getMinutes() -
+    x.getTimezoneOffset()
+  );
+
+  return x.toISOString().slice(0,10);
+
+}
+
+function fmtDate(v){
+
+  if(!v) return '';
+
+  const p = v.split('-');
+
+  return p.length === 3
+    ? `${p[2]}/${p[1]}/${p[0]}`
+    : v;
+
+}
+
+function autoNo(){
+
+  return 'SB-' +
+    new Date().getFullYear() +
+    '-' +
+    String(db.counter).padStart(3,'0');
+
+}
+
+function uid(){
+
+  return 'inv_' +
+    Date.now().toString(36) +
+    '_' +
+    Math.random().toString(36).slice(2,8);
+
 }
 
 
@@ -757,9 +946,7 @@ function toast(m){
    LINE ITEMS
 ========================= */
 
-function addRow(d){
-
-  d = d || {};
+function addRow(d = {}){
 
   const tr = document.createElement('tr');
 
@@ -776,6 +963,7 @@ function addRow(d){
         class="qt"
         type="number"
         min="0"
+        step="1"
       >
     </td>
 
@@ -784,17 +972,21 @@ function addRow(d){
         class="rt"
         type="number"
         min="0"
+        step="0.01"
       >
     </td>
 
-    <td class="a">₹0.00</td>
+    <td class="a">
+      ₹0.00
+    </td>
 
     <td class="x">
-      <button aria-label="Remove item">✕</button>
+      <button type="button">✕</button>
     </td>
   `;
 
-  tr.querySelector('.d').value = d.d || '';
+  tr.querySelector('.d').value =
+    d.d || '';
 
   tr.querySelector('.qt').value =
     d.q == null ? 1 : d.q;
@@ -802,72 +994,113 @@ function addRow(d){
   tr.querySelector('.rt').value =
     d.r == null ? 0 : d.r;
 
-  tr.addEventListener('input',calc);
+  tr.addEventListener(
+    'input',
+    calc
+  );
 
-  tr.querySelector('.x button').onclick = ()=>{
-    tr.remove();
-    calc();
-  };
+  tr.querySelector('.x button').onclick =
+    () => {
+
+      if(
+        document.querySelectorAll(
+          '#rows tr'
+        ).length <= 1
+      ){
+
+        toast(
+          'At least one item is required'
+        );
+
+        return;
+      }
+
+      tr.remove();
+
+      calc();
+
+    };
 
   $('rows').appendChild(tr);
 
   calc();
+
 }
 
 function items(){
 
   return [
-    ...document.querySelectorAll('#rows tr')
+    ...document.querySelectorAll(
+      '#rows tr'
+    )
   ].map(tr => ({
-    d:tr.querySelector('.d').value,
-    q:+tr.querySelector('.qt').value || 0,
-    r:+tr.querySelector('.rt').value || 0
+    d:tr.querySelector('.d').value.trim(),
+    q:Number(
+      tr.querySelector('.qt').value
+    ) || 0,
+    r:Number(
+      tr.querySelector('.rt').value
+    ) || 0
   }));
 
 }
 
-function totals(it,g){
+function totals(list,g){
 
-  const s = it.reduce(
-    (a,x)=>a + x.q * x.r,
-    0
-  );
+  const subtotal =
+    list.reduce(
+      (a,x) => a + x.q * x.r,
+      0
+    );
 
-  const t = s * g / 100;
+  const gst =
+    subtotal *
+    (Number(g)||0) /
+    100;
 
   return {
-    s,
-    t,
-    all:s+t
+    subtotal,
+    gst,
+    total:subtotal + gst
   };
+
 }
 
 function calc(){
 
   document
     .querySelectorAll('#rows tr')
-    .forEach(tr=>{
+    .forEach(tr => {
 
       const amount =
-        (+tr.querySelector('.qt').value || 0) *
-        (+tr.querySelector('.rt').value || 0);
+        (Number(
+          tr.querySelector('.qt').value
+        ) || 0) *
+        (Number(
+          tr.querySelector('.rt').value
+        ) || 0);
 
-      tr.querySelector('.a').textContent =
-        inr(amount);
+      tr.querySelector('.a')
+        .textContent = inr(amount);
 
     });
 
-  const T =
-    totals(
-      items(),
-      +$('gst').value
-    );
+  const t = totals(
+    items(),
+    $('gst').value
+  );
 
-  $('sub').textContent = inr(T.s);
-  $('gstamt').textContent = inr(T.t);
-  $('total').textContent = inr(T.all);
+  $('sub').textContent =
+    inr(t.subtotal);
 
-  drawQr(T.all);
+  $('gstamt').textContent =
+    inr(t.gst);
+
+  $('total').textContent =
+    inr(t.total);
+
+  drawQr(t.total);
+
 }
 
 
@@ -877,23 +1110,34 @@ function calc(){
 
 document
   .querySelectorAll('[data-remember]')
-  .forEach(el=>{
+  .forEach(el => {
 
-    if(db.settings[el.id] != null){
-      el.value = db.settings[el.id];
+    if(
+      db.settings[el.id] != null
+    ){
+
+      el.value =
+        db.settings[el.id];
+
     }
 
-    el.addEventListener('input',()=>{
+    el.addEventListener(
+      'input',
+      () => {
 
-      db.settings[el.id] = el.value;
+        db.settings[el.id] =
+          el.value;
 
-      persist();
+        persist();
 
-    });
+      }
+    );
 
   });
 
-if(db.settings.notes == null){
+if(
+  db.settings.notes == null
+){
 
   $('notes').value =
     'Payment due by the due date. Thank you for working with ShortBamboo.';
@@ -909,10 +1153,10 @@ function renderClients(){
 
   $('clients').innerHTML =
     Object.keys(db.clients)
-      .map(n =>
-        '<option value="' +
-        n.replace(/"/g,'&quot;') +
-        '">'
+      .sort()
+      .map(
+        n =>
+          `<option value="${n.replace(/"/g,'&quot;')}">`
       )
       .join('');
 
@@ -925,44 +1169,72 @@ function saveClient(){
 
   if(!n){
 
-    toast('Pehle client ka naam daalo');
+    toast(
+      'Pehle client ka naam daalo'
+    );
 
     return;
   }
 
   db.clients[n] = {
-    addr:$('caddr').value,
-    gst:$('cgst').value
+
+    addr:
+      $('caddr').value.trim(),
+
+    pan:
+      $('cpan').value
+        .trim()
+        .toUpperCase(),
+
+    gst:
+      $('cgst').value
+        .trim()
+        .toUpperCase()
+
   };
 
   persist();
+
   renderClients();
 
   toast('Client saved');
 
 }
 
-function delClient(btn){
+function delClient(b){
 
   const n =
     $('cname').value.trim();
 
   if(!db.clients[n]){
 
-    toast('Ye client saved nahi hai');
+    toast(
+      'Ye client saved nahi hai'
+    );
 
     return;
   }
 
-  if(!btn.dataset.arm){
+  if(
+    b.dataset.arm !== '1'
+  ){
 
-    btn.dataset.arm = '1';
-    btn.textContent = 'Tap again';
+    b.dataset.arm = '1';
 
-    setTimeout(()=>{
-      btn.dataset.arm = '';
-      btn.textContent = 'Delete client';
-    },3000);
+    b.textContent =
+      'Tap again';
+
+    setTimeout(
+      () => {
+
+        b.dataset.arm = '';
+
+        b.textContent =
+          'Delete client';
+
+      },
+      3000
+    );
 
     return;
   }
@@ -970,10 +1242,13 @@ function delClient(btn){
   delete db.clients[n];
 
   persist();
+
   renderClients();
 
-  btn.dataset.arm = '';
-  btn.textContent = 'Delete client';
+  b.dataset.arm = '';
+
+  b.textContent =
+    'Delete client';
 
   toast('Client deleted');
 
@@ -982,12 +1257,17 @@ function delClient(btn){
 function pickClient(){
 
   const c =
-    db.clients[$('cname').value];
+    db.clients[
+      $('cname').value
+    ];
 
   if(c){
 
     $('caddr').value =
       c.addr || '';
+
+    $('cpan').value =
+      c.pan || '';
 
     $('cgst').value =
       c.gst || '';
@@ -998,37 +1278,238 @@ function pickClient(){
 
 
 /* =========================
-   INVOICES
+   FORM
 ========================= */
 
 function readForm(){
 
   return {
-    no:$('no').value.trim(),
-    date:$('date').value,
-    due:$('due').value,
-    cname:$('cname').value.trim(),
-    caddr:$('caddr').value,
-    cgst:$('cgst').value,
-    gst:$('gst').value,
-    items:items()
+
+    id:
+      currentInvoiceId,
+
+    no:
+      $('no').value.trim(),
+
+    date:
+      $('date').value,
+
+    due:
+      $('due').value,
+
+    cname:
+      $('cname').value.trim(),
+
+    caddr:
+      $('caddr').value.trim(),
+
+    cpan:
+      $('cpan').value
+        .trim()
+        .toUpperCase(),
+
+    cgst:
+      $('cgst').value
+        .trim()
+        .toUpperCase(),
+
+    pan:
+      $('pan').value
+        .trim()
+        .toUpperCase(),
+
+    mgst:
+      $('mgst').value
+        .trim()
+        .toUpperCase(),
+
+    upi:
+      $('upi').value.trim(),
+
+    pay:
+      $('pay').value.trim(),
+
+    notes:
+      $('notes').value.trim(),
+
+    gst:
+      $('gst').value,
+
+    items:
+      items(),
+
+    saved:
+      Date.now()
+
   };
 
 }
 
+function valid(o){
+
+  if(!o.no){
+
+    toast(
+      'Invoice number daalo'
+    );
+
+    $('no').focus();
+
+    return false;
+  }
+
+  if(!o.cname){
+
+    toast(
+      'Client name daalo'
+    );
+
+    $('cname').focus();
+
+    return false;
+  }
+
+  if(
+    !o.date ||
+    !o.due
+  ){
+
+    toast(
+      'Invoice aur due date select karo'
+    );
+
+    return false;
+  }
+
+  if(
+    !o.items.some(
+      x =>
+        x.d &&
+        x.q > 0 &&
+        x.r >= 0
+    )
+  ){
+
+    toast(
+      'Item description, quantity aur rate check karo'
+    );
+
+    return false;
+  }
+
+  if(
+    o.pan &&
+    o.pan.length !== 10
+  ){
+
+    toast(
+      'Our PAN number check karo'
+    );
+
+    return false;
+  }
+
+  if(
+    o.cpan &&
+    o.cpan.length !== 10
+  ){
+
+    toast(
+      'Client PAN number check karo'
+    );
+
+    return false;
+  }
+
+  if(
+    o.cgst &&
+    o.cgst.length !== 15
+  ){
+
+    toast(
+      'Client GSTIN check karo'
+    );
+
+    return false;
+  }
+
+  if(
+    o.mgst &&
+    o.mgst.length !== 15
+  ){
+
+    toast(
+      'Our GSTIN check karo'
+    );
+
+    return false;
+  }
+
+  return true;
+
+}
+
+
+/* =========================
+   LOAD / NEW INVOICE
+========================= */
+
 function fillForm(o){
 
-  $('no').value = o.no;
-  $('date').value = o.date;
-  $('due').value = o.due;
-  $('cname').value = o.cname;
-  $('caddr').value = o.caddr;
-  $('cgst').value = o.cgst;
-  $('gst').value = o.gst;
+  currentInvoiceId =
+    o.id || null;
+
+  $('no').value =
+    o.no || '';
+
+  $('date').value =
+    o.date || '';
+
+  $('due').value =
+    o.due || '';
+
+  $('cname').value =
+    o.cname || '';
+
+  $('caddr').value =
+    o.caddr || '';
+
+  $('cpan').value =
+    o.cpan || '';
+
+  $('cgst').value =
+    o.cgst || '';
+
+  $('pan').value =
+    o.pan ||
+    db.settings.pan ||
+    '';
+
+  $('mgst').value =
+    o.mgst ||
+    db.settings.mgst ||
+    '';
+
+  $('upi').value =
+    o.upi ||
+    db.settings.upi ||
+    '';
+
+  $('pay').value =
+    o.pay ||
+    db.settings.pay ||
+    '';
+
+  $('notes').value =
+    o.notes || '';
+
+  $('gst').value =
+    o.gst || '0';
 
   $('rows').innerHTML = '';
 
   (
+    o.items &&
     o.items.length
       ? o.items
       : [{}]
@@ -1040,177 +1521,298 @@ function fillForm(o){
 
 function newInvoice(){
 
-  const t = new Date();
+  const now =
+    new Date();
+
+  const due =
+    new Date(
+      now.getTime() +
+      7 * 86400000
+    );
+
+  currentInvoiceId =
+    null;
 
   fillForm({
 
-    no:autoNo(),
+    no:
+      autoNo(),
 
-    date:isoDay(t),
+    date:
+      isoDay(now),
 
-    due:isoDay(
-      new Date(
-        t.getTime() +
-        7 * 864e5
-      )
-    ),
+    due:
+      isoDay(due),
 
     cname:'',
-
     caddr:'',
-
+    cpan:'',
     cgst:'',
+
+    pan:
+      db.settings.pan || '',
+
+    mgst:
+      db.settings.mgst || '',
+
+    upi:
+      db.settings.upi || '',
+
+    pay:
+      db.settings.pay || '',
+
+    notes:
+      db.settings.notes ||
+      'Payment due by the due date. Thank you for working with ShortBamboo.',
 
     gst:'0',
 
-    items:[{}]
+    items:[
+      {}
+    ]
 
   });
 
 }
 
-function saveInvoice(){
 
-  const o = readForm();
+/* =========================
+   SAVE INVOICE
+========================= */
 
-  if(!o.no){
+function saveInvoice(
+  silent = false
+){
 
-    toast(
-      'Add an invoice number first'
-    );
+  const o =
+    readForm();
 
-    return;
+  if(
+    !valid(o)
+  ){
+
+    return false;
+
   }
 
-  if(!o.cname){
+  let i =
+    o.id
+      ? db.invoices.findIndex(
+          x => x.id === o.id
+        )
+      : -1;
 
-    toast(
-      'Add a client name first'
-    );
+  if(i < 0){
 
-    return;
+    i =
+      db.invoices.findIndex(
+        x => x.no === o.no
+      );
+
   }
-
-  const wasAuto =
-    o.no === autoNo();
-
-  const i =
-    db.invoices.findIndex(
-      x=>x.no === o.no
-    );
-
-  o.saved = Date.now();
 
   if(i >= 0){
-    db.invoices[i] = o;
+
+    o.id =
+      db.invoices[i].id ||
+      uid();
+
+    db.invoices[i] =
+      o;
+
   }else{
+
+    o.id =
+      uid();
+
     db.invoices.unshift(o);
+
+    if(
+      o.no === autoNo()
+    ){
+
+      db.counter++;
+
+    }
+
   }
+
+  currentInvoiceId =
+    o.id;
 
   db.clients[o.cname] = {
+
     addr:o.caddr,
+
+    pan:o.cpan,
+
     gst:o.cgst
+
   };
 
-  if(wasAuto){
-    db.counter++;
-  }
-
   persist();
+
   renderClients();
+
   renderHist();
 
-  toast(
-    'Invoice ' +
-    o.no +
-    ' saved'
-  );
+  if(!silent){
+
+    toast(
+      'Invoice ' +
+      o.no +
+      ' saved successfully'
+    );
+
+  }
+
+  return true;
 
 }
 
+
+/* =========================
+   SAVED INVOICES
+========================= */
+
 function renderHist(){
 
-  const h = $('hist');
+  const h =
+    $('hist');
 
-  if(!db.invoices.length){
+  if(
+    !db.invoices.length
+  ){
 
     h.innerHTML =
       '<div class="empty">' +
-      'No saved invoices yet. ' +
-      'Fill one in and tap Save invoice.' +
+      'No saved invoices yet.<br>' +
+      'Create your first invoice and tap Save invoice.' +
       '</div>';
 
     return;
+
   }
 
   h.innerHTML = '';
 
-  db.invoices.forEach(o=>{
+  db.invoices.forEach(o => {
 
-    const T =
+    const t =
       totals(
-        o.items,
-        +o.gst
+        o.items || [],
+        o.gst
       );
 
     const d =
-      document.createElement('div');
+      document.createElement(
+        'div'
+      );
 
-    d.className = 'item';
+    d.className =
+      'item';
 
-    d.innerHTML = `
-      <div>
-        <b></b>
-        <span></span>
-      </div>
+    d.innerHTML =
+      '<div>' +
+        '<b></b>' +
+        '<span></span>' +
+      '</div>' +
 
-      <div class="btns">
-        <button>Open</button>
-        <button class="ghost">Delete</button>
-      </div>
-    `;
+      '<div class="btns">' +
+        '<button>Open</button>' +
+        '<button class="ghost">PDF</button>' +
+        '<button class="ghost danger">Delete</button>' +
+      '</div>';
 
-    d.querySelector('b').textContent =
-      o.no + ' · ' + o.cname;
+    d.querySelector('b')
+      .textContent =
+        o.no +
+        ' · ' +
+        o.cname;
 
-    d.querySelector('span').textContent =
-      o.date + ' · ' + inr(T.all);
+    d.querySelector('span')
+      .textContent =
+        fmtDate(o.date) +
+        ' · ' +
+        inr(t.total);
 
-    const b =
-      d.querySelectorAll('button');
+    const bs =
+      d.querySelectorAll(
+        'button'
+      );
 
-    b[0].onclick = ()=>{
-      fillForm(o);
-      tab('create');
-    };
+    bs[0].onclick =
+      () => {
 
-    b[1].onclick = ()=>{
+        fillForm(o);
 
-      if(!b[1].dataset.arm){
+        tab('create');
 
-        b[1].dataset.arm = '1';
-        b[1].textContent =
-          'Tap again to delete';
+        scrollTo({
+          top:0,
+          behavior:'smooth'
+        });
 
-        setTimeout(()=>{
-          b[1].dataset.arm = '';
-          b[1].textContent = 'Delete';
-        },3000);
+      };
 
-        return;
-      }
+    bs[1].onclick =
+      () => {
 
-      db.invoices =
-        db.invoices.filter(
-          x=>x !== o
+        fillForm(o);
+
+        tab('create');
+
+        setTimeout(
+          savePdf,
+          150
         );
 
-      persist();
-      renderHist();
+      };
 
-      toast('Invoice deleted');
+    bs[2].onclick =
+      () => {
 
-    };
+        if(
+          bs[2].dataset.arm !== '1'
+        ){
+
+          bs[2].dataset.arm =
+            '1';
+
+          bs[2].textContent =
+            'Tap again';
+
+          setTimeout(
+            () => {
+
+              bs[2].dataset.arm =
+                '';
+
+              bs[2].textContent =
+                'Delete';
+
+            },
+            3000
+          );
+
+          return;
+
+        }
+
+        db.invoices =
+          db.invoices.filter(
+            x => x.id !== o.id
+          );
+
+        persist();
+
+        renderHist();
+
+        toast(
+          'Invoice deleted'
+        );
+
+      };
 
     h.appendChild(d);
 
@@ -1240,8 +1842,12 @@ function tab(n){
       ? ''
       : 'ghost';
 
-  if(n === 'hist'){
+  if(
+    n === 'hist'
+  ){
+
     renderHist();
+
   }
 
 }
@@ -1251,25 +1857,30 @@ function tab(n){
    UPI QR
 ========================= */
 
-let lastQr = null;
-
-function upiLink(amt){
+function upiLink(amount){
 
   const u =
     $('upi').value.trim();
 
   if(!u){
+
     return '';
+
   }
 
   return (
     'upi://pay?pa=' +
-    encodeURIComponent(u).replace('%40','@') +
+    encodeURIComponent(u) +
     '&pn=' +
-    encodeURIComponent('ShortBamboo') +
-    (amt > 0
-      ? '&am=' + amt.toFixed(2)
-      : '') +
+    encodeURIComponent(
+      'ShortBamboo'
+    ) +
+    (
+      amount > 0
+        ? '&am=' +
+          amount.toFixed(2)
+        : ''
+    ) +
     '&cu=INR&tn=' +
     encodeURIComponent(
       'Invoice ' +
@@ -1279,24 +1890,33 @@ function upiLink(amt){
 
 }
 
-function drawQr(amt){
+function drawQr(amount){
 
-  const box = $('qr');
-  const cap = $('qrcap');
+  const box =
+    $('qr');
 
-  box.innerHTML = '';
-  cap.textContent = '';
+  const cap =
+    $('qrcap');
 
-  lastQr = null;
+  box.innerHTML =
+    '';
+
+  cap.textContent =
+    '';
+
+  lastQr =
+    null;
 
   const link =
-    upiLink(amt);
+    upiLink(amount);
 
   if(
     !link ||
     typeof QRCode === 'undefined'
   ){
+
     return;
+
   }
 
   try{
@@ -1314,44 +1934,19 @@ function drawQr(amt){
       );
 
     cap.textContent =
-      amt > 0
-        ? 'Scan to pay ' + inr(amt)
+      amount > 0
+        ? 'Scan to pay ' +
+          inr(amount)
         : 'Scan to pay';
 
-  }catch(e){
-
-    console.error(
-      'QR generation failed',
-      e
-    );
-
-  }
+  }catch(e){}
 
 }
 
 
 /* =========================
-   PDF HELPERS
+   QR PDF DOM
 ========================= */
-
-const esc = s =>
-  String(
-    s == null ? '' : s
-  ).replace(
-    /[&<>"]/g,
-    c=>({
-      '&':'&amp;',
-      '<':'&lt;',
-      '>':'&gt;',
-      '"':'&quot;'
-    }[c])
-  );
-
-const nl = s =>
-  esc(s).replace(
-    /\n/g,
-    '<br>'
-  );
 
 function qrDom(){
 
@@ -1359,7 +1954,9 @@ function qrDom(){
     !lastQr ||
     !lastQr._oQRCode
   ){
+
     return null;
+
   }
 
   const m =
@@ -1370,57 +1967,62 @@ function qrDom(){
 
   const px =
     Math.max(
-      2,
+      3,
       Math.floor(150 / n)
     );
 
-  const size =
-    n * px;
-
   const w =
-    document.createElement('div');
+    document.createElement(
+      'div'
+    );
 
   w.style.cssText =
-    'position:relative;' +
-    'width:' + size + 'px;' +
-    'height:' + size + 'px;' +
-    'background:#fff';
+    `position:relative;
+     width:${n*px}px;
+     height:${n*px}px;
+     background:#fff`;
 
   for(
-    let r = 0;
-    r < n;
+    let r=0;
+    r<n;
     r++
   ){
 
-    let c = 0;
+    let c=0;
 
-    while(c < n){
+    while(c<n){
 
-      if(m.isDark(r,c)){
+      if(
+        m.isDark(r,c)
+      ){
 
-        let e = c;
+        let e=c;
 
         while(
-          e < n &&
+          e<n &&
           m.isDark(r,e)
         ){
+
           e++;
+
         }
 
-        const d =
-          document.createElement('div');
+        const b =
+          document.createElement(
+            'div'
+          );
 
-        d.style.cssText =
-          'position:absolute;' +
-          'background:#000;' +
-          'left:' + c * px + 'px;' +
-          'top:' + r * px + 'px;' +
-          'width:' + (e-c) * px + 'px;' +
-          'height:' + px + 'px';
+        b.style.cssText =
+          `position:absolute;
+           background:#000;
+           left:${c*px}px;
+           top:${r*px}px;
+           width:${(e-c)*px}px;
+           height:${px}px`;
 
-        w.appendChild(d);
+        w.appendChild(b);
 
-        c = e;
+        c=e;
 
       }else{
 
@@ -1438,131 +2040,152 @@ function qrDom(){
 
 
 /* =========================
-   CLONE SAME UI FOR PDF
+   PDF CLONE
 ========================= */
 
-function cloneForPdf(W){
+function cloneForPdf(){
 
   const src =
-    document.querySelector('.paper');
+    $('invoicePaper');
 
   const c =
     src.cloneNode(true);
 
-  c.classList.add('pdf');
-
-  const se =
+  const orig =
     src.querySelectorAll(
       'input,textarea,select'
     );
 
-  c.querySelectorAll(
-    'input,textarea,select'
-  ).forEach((el,i)=>{
+  const copies =
+    c.querySelectorAll(
+      'input,textarea,select'
+    );
 
-    const o = se[i];
+  c.classList.add('pdf');
 
-    let v =
-      o.tagName === 'SELECT'
-        ? o.options[o.selectedIndex].text
-        : o.value;
+  copies.forEach(
+    (el,i) => {
 
-    if(
-      o.type === 'date' &&
-      v
-    ){
+      const o =
+        orig[i];
 
-      const p =
-        v.split('-');
+      if(!o) return;
 
-      v =
-        p[2] +
-        '/' +
-        p[1] +
-        '/' +
-        p[0];
+      let rawValue =
+        o.tagName === 'SELECT'
+          ? (
+              o.options[
+                o.selectedIndex
+              ]?.text || ''
+            )
+          : o.value || '';
+
+      let v =
+        String(rawValue)
+          .trim();
+
+      /*
+        IMPORTANT:
+        Form fields remain blank.
+        Only the PDF version shows N/A.
+      */
+
+      if(!v){
+
+        v = 'N/A';
+
+      }
+
+      if(
+        o.type === 'date' &&
+        v !== 'N/A'
+      ){
+
+        v =
+          fmtDate(v);
+
+      }
+
+      const d =
+        document.createElement(
+          'div'
+        );
+
+      d.textContent =
+        v;
+
+      if(
+        v === 'N/A'
+      ){
+
+        d.className =
+          'pdf-na';
+
+      }
+
+      const multi =
+        o.tagName === 'TEXTAREA';
+
+      d.style.cssText =
+        `border:1px solid #dde2cf;
+         border-radius:6px;
+         padding:7px 9px;
+         background:#f6f8ef;
+         color:#1a1d18;
+         font:inherit;
+         width:${o.tagName === 'SELECT'
+           ? '85px'
+           : '100%'};
+         min-height:${multi
+           ? 56
+           : 34}px;
+         white-space:pre-wrap;
+         overflow-wrap:anywhere;
+         display:flex;
+         align-items:${multi
+           ? 'flex-start'
+           : 'center'}`;
+
+      el.replaceWith(d);
 
     }
+  );
 
-    const d =
-      document.createElement('div');
-
-    const multi =
-      o.tagName === 'TEXTAREA';
-
-    const sel =
-      o.tagName === 'SELECT';
-
-    const long =
-      /\S{22,}/.test(v);
-
-    d.textContent = v;
-
-    d.style.cssText =
-      'border:1px solid #dde2cf;' +
-      'border-radius:6px;' +
-      'padding:6px 8px;' +
-      'background:#f6f8ef;' +
-      'color:#1a1d18;' +
-      'font:inherit;' +
-      'overflow:hidden;' +
-      'white-space:pre-wrap;' +
-      'overflow-wrap:break-word;' +
-      (
-        sel
-          ? 'width:80px;'
-          : 'width:100%;'
-      ) +
-      (
-        long
-          ? 'word-break:break-all;'
-          : ''
-      ) +
-      'min-height:' +
-      (
-        multi
-          ? 56
-          : sel
-            ? 34
-            : o.offsetHeight
-      ) +
-      'px;' +
-      (
-        multi
-          ? ''
-          : 'display:flex;' +
-            'align-items:center;'
-      );
-
-    el.replaceWith(d);
-
-  });
+  /*
+    Remove delete buttons and
+    other non-PDF elements.
+  */
 
   c.querySelectorAll(
     '.x,.nopdf'
-  ).forEach(e=>e.remove());
+  ).forEach(
+    x => x.remove()
+  );
+
+
+  /*
+    Preserve QR inside PDF.
+  */
 
   const q =
     c.querySelector('#qr');
 
-  const cap =
-    c.querySelector('#qrcap');
-
   if(q){
 
-    q.innerHTML = '';
+    q.innerHTML =
+      '';
 
-    const w =
+    const qv =
       qrDom();
 
-    if(w){
+    if(qv){
 
-      q.appendChild(w);
+      q.appendChild(qv);
 
       q.style.cssText =
         'display:inline-block;' +
         'background:#fff;' +
-        'padding:12px;' +
+        'padding:10px;' +
         'border:1px solid #dde2cf;' +
         'border-radius:8px;' +
         'margin-top:10px';
@@ -1571,60 +2194,22 @@ function cloneForPdf(W){
 
   }
 
-  if(cap){
 
-    cap.style.color =
-      '#6b7160';
+  c.querySelectorAll(
+    '[id]'
+  ).forEach(
+    x =>
+      x.removeAttribute('id')
+  );
 
-    cap.style.textAlign =
-      'center';
+  c.style.borderRadius =
+    '0';
 
-  }
-
-  const nr =
-    c.querySelector('.nrow');
-
-  const nt =
-    c.querySelector('.nt');
-
-  const qb =
-    c.querySelector('.qrbox');
-
-  if(
-    nr &&
-    nt &&
-    qb
-  ){
-
-    nr.style.cssText =
-      'display:flex;' +
-      'gap:18px;' +
-      'align-items:flex-end';
-
-    nt.style.cssText =
-      'flex:1;' +
-      'min-width:0';
-
-    qb.style.cssText =
-      'flex:none;' +
-      'text-align:center';
-
-  }
-
-  c.querySelectorAll('[id]')
-    .forEach(e =>
-      e.removeAttribute('id')
-    );
-
-  c.style.borderRadius = '0';
+  c.style.boxShadow =
+    'none';
 
   c.style.borderTop =
     '8px solid #b6e36b';
-
-  c.style.minHeight =
-    Math.round(
-      W * 297 / 210
-    ) + 'px';
 
   return c;
 
@@ -1632,55 +2217,75 @@ function cloneForPdf(W){
 
 
 /* =========================
-   CREATE PDF
+   MAKE PDF
 ========================= */
 
 async function makePdf(){
 
-  const W =
-    document.querySelector(
-      '.paper'
-    ).offsetWidth;
+  if(
+    typeof html2pdf ===
+    'undefined'
+  ){
+
+    throw new Error(
+      'PDF library unavailable'
+    );
+
+  }
+
+  const src =
+    $('invoicePaper');
+
+  const width =
+    src.offsetWidth;
 
   const c =
-    cloneForPdf(W);
+    cloneForPdf();
 
   const host =
-    document.createElement('div');
+    document.createElement(
+      'div'
+    );
 
   host.style.cssText =
-    'position:fixed;' +
-    'left:-99999px;' +
-    'top:0;' +
-    'background:#fff;' +
-    'width:' + W + 'px;';
+    `position:fixed;
+     left:-100000px;
+     top:0;
+     width:${width}px;
+     background:#fff;
+     z-index:-1`;
 
   host.appendChild(c);
 
-  document.body.appendChild(host);
+  document.body.appendChild(
+    host
+  );
 
   try{
 
     return await html2pdf()
       .set({
+
         margin:0,
 
         image:{
           type:'jpeg',
-          quality:.95
+          quality:.98
         },
 
         html2canvas:{
           scale:2,
-          backgroundColor:'#ffffff',
           useCORS:true,
+          allowTaint:false,
+          backgroundColor:'#fff',
           logging:false
         },
 
         jsPDF:{
           unit:'mm',
           format:'a4',
-          orientation:'portrait'
+          orientation:'portrait',
+          compress:true
         },
 
         pagebreak:{
@@ -1705,75 +2310,500 @@ async function makePdf(){
 
 
 /* =========================
-   RELIABLE PDF DOWNLOAD
+   FOLDER ACCESS
 ========================= */
 
-async function downloadPdfBlob(blob,name){
+function supportsFolderAccess(){
+
+  return (
+    typeof window.showDirectoryPicker ===
+    'function'
+  );
+
+}
+
+async function openFolderDB(){
+
+  return new Promise(
+    (resolve,reject) => {
+
+      const r =
+        indexedDB.open(
+          FOLDER_DB,
+          1
+        );
+
+      r.onupgradeneeded =
+        () => {
+
+          r.result
+            .createObjectStore(
+              'handles'
+            );
+
+        };
+
+      r.onsuccess =
+        () =>
+          resolve(
+            r.result
+          );
+
+      r.onerror =
+        () =>
+          reject(
+            r.error
+          );
+
+    }
+  );
+
+}
+
+async function storeFolderHandle(
+  handle
+){
+
+  try{
+
+    const d =
+      await openFolderDB();
+
+    return new Promise(
+      (resolve,reject) => {
+
+        const tx =
+          d.transaction(
+            'handles',
+            'readwrite'
+          );
+
+        tx.objectStore(
+          'handles'
+        ).put(
+          handle,
+          'invoiceFolder'
+        );
+
+        tx.oncomplete =
+          resolve;
+
+        tx.onerror =
+          () =>
+            reject(
+              tx.error
+            );
+
+      }
+    );
+
+  }catch(e){}
+
+}
+
+async function getStoredFolderHandle(){
+
+  try{
+
+    const d =
+      await openFolderDB();
+
+    return new Promise(
+      (resolve,reject) => {
+
+        const tx =
+          d.transaction(
+            'handles',
+            'readonly'
+          );
+
+        const r =
+          tx.objectStore(
+            'handles'
+          ).get(
+            'invoiceFolder'
+          );
+
+        r.onsuccess =
+          () =>
+            resolve(
+              r.result || null
+            );
+
+        r.onerror =
+          () =>
+            reject(
+              r.error
+            );
+
+      }
+    );
+
+  }catch(e){
+
+    return null;
+
+  }
+
+}
+
+async function clearFolderHandle(){
+
+  try{
+
+    const d =
+      await openFolderDB();
+
+    return new Promise(
+      (resolve,reject) => {
+
+        const tx =
+          d.transaction(
+            'handles',
+            'readwrite'
+          );
+
+        tx.objectStore(
+          'handles'
+        ).delete(
+          'invoiceFolder'
+        );
+
+        tx.oncomplete =
+          resolve;
+
+        tx.onerror =
+          () =>
+            reject(
+              tx.error
+            );
+
+      }
+    );
+
+  }catch(e){}
+
+}
+
+async function checkFolderPermission(
+  handle,
+  request=false
+){
+
+  try{
+
+    const opts = {
+      mode:'readwrite'
+    };
+
+    let p =
+      await handle.queryPermission(
+        opts
+      );
+
+    if(
+      p === 'granted'
+    ){
+
+      return true;
+
+    }
+
+    if(request){
+
+      p =
+        await handle.requestPermission(
+          opts
+        );
+
+      return p === 'granted';
+
+    }
+
+    return false;
+
+  }catch(e){
+
+    return false;
+
+  }
+
+}
+
+function showFolder(name){
+
+  const status =
+    $('folderStatus');
+
+  if(!status) return;
+
+  status.textContent =
+    '✓ Connected: ' +
+    name;
+
+  status.classList.add(
+    'ok'
+  );
+
+  if($('forgetFolder')){
+
+    $('forgetFolder').style.display =
+      'inline-block';
+
+  }
+
+  if($('folderBtn')){
+
+    $('folderBtn').textContent =
+      '📁 Change Folder';
+
+  }
+
+}
+
+async function chooseFolder(){
 
   if(
-    window.showSaveFilePicker
+    !supportsFolderAccess()
   ){
 
-    try{
+    toast(
+      'This browser does not support direct folder saving. Use Chrome over HTTPS or normal download.'
+    );
 
-      const handle =
-        await window.showSaveFilePicker({
+    return;
 
-          suggestedName:name,
+  }
 
-          types:[
-            {
-              description:'PDF document',
-              accept:{
-                'application/pdf':['.pdf']
-              }
-            }
-          ]
+  try{
 
-        });
+    const h =
+      await window.showDirectoryPicker({
+        mode:'readwrite'
+      });
 
-      const writable =
-        await handle.createWritable();
+    if(
+      !(await checkFolderPermission(
+        h,
+        true
+      ))
+    ){
 
-      await writable.write(blob);
-      await writable.close();
+      toast(
+        'Folder permission denied'
+      );
 
-      return 'saved';
+      return;
 
-    }catch(e){
+    }
 
-      if(
-        e &&
-        e.name === 'AbortError'
-      ){
-        return 'cancelled';
-      }
+    folderHandle =
+      h;
+
+    await storeFolderHandle(
+      h
+    );
+
+    showFolder(
+      h.name
+    );
+
+    toast(
+      'Invoice folder connected'
+    );
+
+  }catch(e){
+
+    if(
+      e.name !== 'AbortError'
+    ){
+
+      toast(
+        'Folder select nahi ho paya'
+      );
 
     }
 
   }
 
+}
+
+async function loadFolder(){
+
+  if(
+    !supportsFolderAccess()
+  ){
+
+    return;
+
+  }
+
+  const h =
+    await getStoredFolderHandle();
+
+  if(!h){
+
+    return;
+
+  }
+
+  if(
+    await checkFolderPermission(
+      h,
+      false
+    )
+  ){
+
+    folderHandle =
+      h;
+
+    showFolder(
+      h.name
+    );
+
+  }
+
+}
+
+async function forgetFolder(){
+
+  folderHandle =
+    null;
+
+  await clearFolderHandle();
+
+  if($('folderStatus')){
+
+    $('folderStatus').textContent =
+      'No folder connected. PDF will use normal download if no folder is selected.';
+
+    $('folderStatus')
+      .classList.remove(
+        'ok'
+      );
+
+  }
+
+  if($('forgetFolder')){
+
+    $('forgetFolder').style.display =
+      'none';
+
+  }
+
+  if($('folderBtn')){
+
+    $('folderBtn').textContent =
+      '📁 Select Invoice Folder';
+
+  }
+
+  toast(
+    'Folder disconnected'
+  );
+
+}
+
+async function saveBlobToFolder(
+  blob,
+  filename
+){
+
+  if(!folderHandle){
+
+    return false;
+
+  }
+
+  if(
+    !(await checkFolderPermission(
+      folderHandle,
+      true
+    ))
+  ){
+
+    return false;
+
+  }
+
+  try{
+
+    const fileHandle =
+      await folderHandle.getFileHandle(
+        filename,
+        {
+          create:true
+        }
+      );
+
+    const writable =
+      await fileHandle.createWritable();
+
+    await writable.write(
+      blob
+    );
+
+    await writable.close();
+
+    return true;
+
+  }catch(e){
+
+    console.warn(
+      'Folder save failed',
+      e
+    );
+
+    return false;
+
+  }
+
+}
+
+
+/* =========================
+   DOWNLOAD
+========================= */
+
+async function downloadBlob(
+  blob,
+  filename
+){
+
   const url =
-    URL.createObjectURL(blob);
+    URL.createObjectURL(
+      blob
+    );
 
   const a =
-    document.createElement('a');
+    document.createElement(
+      'a'
+    );
 
-  a.href = url;
-  a.download = name;
-  a.rel = 'noopener';
+  a.href =
+    url;
 
-  document.body.appendChild(a);
+  a.download =
+    filename;
+
+  a.style.display =
+    'none';
+
+  document.body.appendChild(
+    a
+  );
 
   a.click();
 
   a.remove();
 
-  setTimeout(()=>{
-    URL.revokeObjectURL(url);
-  },10000);
-
-  return 'downloaded';
+  setTimeout(
+    () =>
+      URL.revokeObjectURL(
+        url
+      ),
+    10000
+  );
 
 }
 
@@ -1784,194 +2814,143 @@ async function downloadPdfBlob(blob,name){
 
 async function savePdf(){
 
-  if(
-    typeof html2pdf === 'undefined'
-  ){
-
-    toast(
-      'PDF tool load nahi hua, internet check karo'
-    );
-
-    return;
-
-  }
-
-  const o =
+  const invoice =
     readForm();
 
-  if(!o.no){
-
-    toast(
-      'Invoice number aur client name daalo'
-    );
-
-    return;
-
-  }
-
-  if(!o.cname){
-
-    toast(
-      'Invoice number aur client name daalo'
-    );
-
-    return;
-
-  }
-
-  toast('PDF ban rahi hai...');
-
-  saveInvoice();
-
-  let blob;
-
-  try{
-
-    blob =
-      await makePdf();
-
-  }catch(e){
-
-    console.error(
-      'PDF generation error:',
-      e
-    );
-
-    toast(
-      'PDF nahi bani, dobara try karo'
-    );
-
-    return;
-
-  }
-
-  const safeClient =
-    o.cname
-      .replace(/[^\w\-]+/g,'_')
-      .replace(/^_+|_+$/g,'');
-
-  const safeInvoice =
-    o.no
-      .replace(/[^\w\-]+/g,'_')
-      .replace(/^_+|_+$/g,'');
-
-  const name =
-    (
-      safeInvoice ||
-      'ShortBamboo-Invoice'
-    ) +
-    (
-      safeClient
-        ? '_' + safeClient
-        : ''
-    ) +
-    '.pdf';
-
   if(
-    !window.showSaveFilePicker &&
-    navigator.canShare &&
-    navigator.share
+    !valid(invoice)
   ){
 
-    try{
-
-      const file =
-        new File(
-          [blob],
-          name,
-          {
-            type:'application/pdf'
-          }
-        );
-
-      if(
-        navigator.canShare({
-          files:[file]
-        })
-      ){
-
-        await navigator.share({
-          files:[file],
-          title:name
-        });
-
-        toast(
-          'PDF ready hai'
-        );
-
-        return;
-
-      }
-
-    }catch(e){
-
-      if(
-        e &&
-        e.name === 'AbortError'
-      ){
-        return;
-      }
-
-      console.warn(
-        'Share failed, falling back to download',
-        e
-      );
-
-    }
+    return;
 
   }
 
+  if(
+    !saveInvoice(true)
+  ){
+
+    return;
+
+  }
+
+  const btn =
+    $('pdfBtn');
+
+  const old =
+    btn.textContent;
+
+  btn.disabled =
+    true;
+
+  btn.textContent =
+    'Creating PDF...';
+
+  toast(
+    'PDF ban rahi hai...'
+  );
+
   try{
 
-    const result =
-      await downloadPdfBlob(
-        blob,
-        name
+    if(
+      typeof html2pdf ===
+      'undefined'
+    ){
+
+      throw new Error(
+        'PDF library unavailable'
       );
 
-    if(result === 'cancelled'){
-      return;
+    }
+
+    const blob =
+      await makePdf();
+
+    if(
+      !blob ||
+      blob.size < 100
+    ){
+
+      throw new Error(
+        'Invalid PDF'
+      );
+
+    }
+
+    const filename =
+      (
+        invoice.no +
+        '_' +
+        invoice.cname
+      )
+      .replace(
+        /[^\w\-]+/g,
+        '_'
+      )
+      .replace(
+        /^_+|_+$/g,
+        ''
+      ) +
+      '.pdf';
+
+
+    /*
+      If folder is connected,
+      save there.
+      Otherwise normal download.
+    */
+
+    let savedToFolder =
+      false;
+
+    if(folderHandle){
+
+      savedToFolder =
+        await saveBlobToFolder(
+          blob,
+          filename
+        );
+
+    }
+
+    if(!savedToFolder){
+
+      await downloadBlob(
+        blob,
+        filename
+      );
+
     }
 
     toast(
-      'PDF save ho gayi'
+      savedToFolder
+        ? 'PDF folder mein save ho gayi'
+        : 'PDF download ho gayi'
     );
 
-  }catch(e){
+  }catch(error){
 
     console.error(
-      'Download failed:',
-      e
+      'PDF generation failed:',
+      error
     );
 
-    try{
+    toast(
+      'PDF nahi bani — Print se Save as PDF khulega'
+    );
 
-      const url =
-        URL.createObjectURL(blob);
+    setTimeout(
+      () =>
+        window.print(),
+      700
+    );
 
-      window.open(
-        url,
-        '_blank',
-        'noopener'
-      );
+  }finally{
 
-      setTimeout(()=>{
-        URL.revokeObjectURL(url);
-      },60000);
+    btn.disabled =
+      false;
 
-      toast(
-        'PDF open ho gayi — wahan se save kar lo'
-      );
-
-    }catch(err){
-
-      console.error(err);
-
-      toast(
-        'PDF save nahi ho paayi'
-      );
-
-    }
+    btn.textContent =
+      old;
 
   }
 
@@ -1979,12 +2958,24 @@ async function savePdf(){
 
 
 /* =========================
-   START APP
+   INITIALIZE
 ========================= */
 
-renderClients();
+async function init(){
 
-newInvoice();
+  renderClients();
+
+  renderHist();
+
+  newInvoice();
+
+  tab('create');
+
+  await loadFolder();
+
+}
+
+init();
 
 </script>
 
