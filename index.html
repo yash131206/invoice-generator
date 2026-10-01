@@ -676,8 +676,13 @@ td{
 
 <div class="toast" id="toast"></div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<!--
+  Local libraries only.
+  No external CDN requests are required for
+  PDF generation or UPI QR generation.
+-->
+<script src="./vendor/html2pdf.bundle.min.js"></script>
+<script src="./vendor/qrcode.min.js"></script>
 
 <script>
 const $ = id => document.getElementById(id);
@@ -1705,11 +1710,6 @@ async function makePdf(){
 
 async function downloadPdfBlob(blob,name){
 
-  /*
-    First try the native Android/browser
-    file save picker when available.
-  */
-
   if(
     window.showSaveFilePicker
   ){
@@ -1742,11 +1742,6 @@ async function downloadPdfBlob(blob,name){
 
     }catch(e){
 
-      /*
-        User cancelled the picker.
-        Do not trigger another download.
-      */
-
       if(
         e &&
         e.name === 'AbortError'
@@ -1757,12 +1752,6 @@ async function downloadPdfBlob(blob,name){
     }
 
   }
-
-
-  /*
-    Android Chrome / normal browsers:
-    standard Blob download.
-  */
 
   const url =
     URL.createObjectURL(blob);
@@ -1832,11 +1821,6 @@ async function savePdf(){
 
   toast('PDF ban rahi hai...');
 
-  /*
-    Save invoice before generating
-    the PDF so the latest data is stored.
-  */
-
   saveInvoice();
 
   let blob;
@@ -1882,13 +1866,6 @@ async function savePdf(){
         : ''
     ) +
     '.pdf';
-
-  /*
-    On browsers supporting Web Share,
-    Android can share the generated PDF.
-    We do this only when the normal
-    save picker is unavailable.
-  */
 
   if(
     !window.showSaveFilePicker &&
@@ -1966,11 +1943,6 @@ async function savePdf(){
       'Download failed:',
       e
     );
-
-    /*
-      Last fallback:
-      open the PDF blob in a new tab.
-    */
 
     try{
 
